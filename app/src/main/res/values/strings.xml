@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Test Compose</string>
+    <string name="screen_one_text">This is the first screen</string>
+    <string name="screen_two_text">This is the second screen</string>
+    <string name="screen_three_text">This is the third screen</string>
+    <string name="button_screen_one">Start screen two</string>
+    <string name="button_screen_two">Start screen three</string>
+    <string name="button_screen_three">Start screen one</string>
+</resources>
