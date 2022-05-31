@@ -1,9 +1,18 @@
 <resources>
-    <string name="app_name">Test Compose</string>
-    <string name="screen_one_text">This is the first screen</string>
-    <string name="screen_two_text">This is the second screen</string>
-    <string name="screen_three_text">This is the third screen</string>
-    <string name="button_screen_one">Start screen two</string>
-    <string name="button_screen_two">Start screen three</string>
-    <string name="button_screen_three">Start screen one</string>
+    <string name="app_name">Student control</string>
+
+    //New practice screen
+    <string name="practice_name">Practice name</string>
+    <string name="tasks">Tasks</string>
+    <string name="students">Students</string>
+    <string name="new_practice_name_value">Philosophy</string>
+    <string name="new_task_name_value">task</string>
+    <string name="new_student_name_value">student</string>
+    <string name="new_task_name_text_button">+ TASK</string>
+    <string name="new_student_text_button">+ STUDENT</string>
+
+
+    //Descriptions
+    <string name="button_close_description">Close</string>
+    <string name="button_add_new_practice_description">Add new practice</string>
 </resources>
