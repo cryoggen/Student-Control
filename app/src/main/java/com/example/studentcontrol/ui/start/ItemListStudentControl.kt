@@ -13,10 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.studentcontrol.ui.navhost.AppStatus
+import com.example.studentcontrol.ui.navhost.ListStatus
 
 @Composable
-fun ItemListStudentControl(practice: String, onClick: () -> Unit = {}, listStatus: AppStatus) {
+fun ItemListStudentControl(practice: String, onClick: () -> Unit = {}, listStatus: ListStatus) {
     Card(
         backgroundColor = MaterialTheme.colors.primary,
         modifier = Modifier
@@ -28,7 +28,7 @@ fun ItemListStudentControl(practice: String, onClick: () -> Unit = {}, listStatu
 }
 
 @Composable
-fun listText(practice: String, appStatus: AppStatus) {
+fun listText(practice: String, appStatus: ListStatus) {
     var checked by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
@@ -36,7 +36,7 @@ fun listText(practice: String, appStatus: AppStatus) {
             .padding(16.dp)
 
     ) {
-        if (appStatus == AppStatus.STUDENTS) {
+        if (appStatus == ListStatus.STUDENTS) {
             Checkbox(
                 checked = checked, onCheckedChange = { checked = !checked }, enabled = true,
                 colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colors.onSurface, checkmarkColor = MaterialTheme.colors.surface)
@@ -55,7 +55,7 @@ fun listText(practice: String, appStatus: AppStatus) {
             )
 
         }
-        if (appStatus == AppStatus.STUDENTS) {
+        if (appStatus == ListStatus.STUDENTS) {
             IconButton(onClick = { }) {
                 Icon(
                     Icons.Filled.Close,

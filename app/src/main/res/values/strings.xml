@@ -10,9 +10,19 @@
     <string name="new_student_name_value">student</string>
     <string name="new_task_name_text_button">+ TASK</string>
     <string name="new_student_text_button">+ STUDENT</string>
+    <string name="new_practice">New practice</string>
+
+    //List practices
+    <string name="navbar_practices_text">All practices</string>
+    //List tasks
+    <string name="navbar_tasks_text">Tasks</string>
+    //List students
+    <string name="navbar_students_text">Students</string>
 
 
     //Descriptions
     <string name="button_close_description">Close</string>
     <string name="button_add_new_practice_description">Add new practice</string>
+    <string name="nav_bar_menu_description">Menu</string>
+    <string name="nav_bar_arrow_back_description">Arrow back</string>
 </resources>

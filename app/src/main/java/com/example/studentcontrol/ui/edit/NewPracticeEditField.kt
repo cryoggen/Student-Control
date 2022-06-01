@@ -20,12 +20,12 @@ enum class EditFieldStatus {
 fun NewPracticeEditField(
     value: String,
     onValueChange: (String) -> Unit,
-    onDeleteEditField: () -> Unit ={},
+    onDeleteEditField: () -> Unit = {},
     keyboardOptions: KeyboardOptions,
-    modifier: Modifier = Modifier,
     placeholder: Int,
     editFieldStatus: EditFieldStatus,
 ) {
+
     Row(
         modifier = Modifier
             .padding(4.dp)
