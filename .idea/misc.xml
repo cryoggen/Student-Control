@@ -5,9 +5,8 @@
       <map>
         <entry key="..\:/Users/svmoskvin/AndroidStudioProjects/Studentcontrol/app/src/main/java/com/example/studentcontrol/MainActivity.kt" value="0.37272727272727274" />
         <entry key="..\:/Users/svmoskvin/AndroidStudioProjects/Studentcontrol/app/src/main/java/com/example/studentcontrol/ui/edit/NewPracticeScreen.kt" value="0.23977272727272728" />
-        <entry key="..\:/Users/svmoskvin/AndroidStudioProjects/Studentcontrol/app/src/main/java/com/example/studentcontrol/ui/navhost/NavHost.kt" value="0.4" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" project-jdk-name="11" project-jdk-type="JavaSDK" />
 </project>

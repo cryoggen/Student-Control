@@ -13,7 +13,7 @@
     <string name="new_practice">New practice</string>
 
     //List practices
-    <string name="navbar_practices_text">All practices</string>
+    <string name="navbar_practices_text">Practices</string>
     //List tasks
     <string name="navbar_tasks_text">Tasks</string>
     //List students
