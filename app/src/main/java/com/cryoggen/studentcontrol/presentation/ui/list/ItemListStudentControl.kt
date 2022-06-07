@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.cryoggen.domain.models.StudentDomain
 import com.cryoggen.studentcontrol.presentation.ui.navhost.ListScreenStatus
 
 
@@ -21,7 +22,8 @@ fun ItemListStudentControl(
     item: String,
     checkedStudent: Boolean = false,
     onClick: () -> Unit = {},
-    listStatus: ListScreenStatus
+    listStatus: ListScreenStatus,
+    saveCheckStudent: () -> Unit = {}
 ) {
     Card(
         backgroundColor = MaterialTheme.colors.primary,
@@ -41,7 +43,10 @@ fun ItemListStudentControl(
         ) {
             if (listStatus is ListScreenStatus.Students) {
                 Checkbox(
-                    checked = checked, onCheckedChange = { checked = !checked }, enabled = true,
+                    checked = checked,
+                    onCheckedChange = { checked = !checked
+                        saveCheckStudent () },
+                    enabled = true,
                     colors = CheckboxDefaults.colors(
                         checkedColor = MaterialTheme.colors.onSurface,
                         checkmarkColor = MaterialTheme.colors.surface

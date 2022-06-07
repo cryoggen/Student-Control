@@ -39,7 +39,7 @@ fun ListScreen(
     val tasks: List<String> by viewModel.tasks.observeAsState(initial = listOf(""))
     val students: List<StudentDomain> by viewModel.students.observeAsState(
         initial = listOf(
-            StudentDomain("", "", "")
+            StudentDomain(name ="", practice = "", task = "")
         )
     )
 
@@ -55,6 +55,7 @@ fun ListScreen(
         is ListScreenStatus.Students -> {
             viewModel.getStudents(practice = listStatus.practice, task = listStatus.task)
             listStatus.listStudents = students
+            listStatus.saveCheckStudent = { student:StudentDomain -> viewModel.insertStudents(listOf(student))}
         }
     }
 

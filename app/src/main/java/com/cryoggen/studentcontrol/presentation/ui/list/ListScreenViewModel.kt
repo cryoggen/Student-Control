@@ -18,7 +18,8 @@ import javax.inject.Inject
 class ListScreenViewModel @Inject constructor(
     private val getPracticesUseCase: GetPracticesUseCase,
     private val getStudentsUseCase: GetStudentsUseCase,
-    private val getTasksUseCase: GetTasksUseCase
+    private val getTasksUseCase: GetTasksUseCase,
+    private val insertStudentsUseCase: InsertStudentsUseCase,
 ) : ViewModel() {
 
 
@@ -49,6 +50,12 @@ class ListScreenViewModel @Inject constructor(
      fun getPractices() {
         viewModelScope.launch {
             _practices.value = getPracticesUseCase.execute()
+        }
+    }
+
+    fun insertStudents(listStudentDomain:List<StudentDomain>) {
+        viewModelScope.launch {
+            insertStudentsUseCase.execute(listStudentDomain)
         }
     }
 

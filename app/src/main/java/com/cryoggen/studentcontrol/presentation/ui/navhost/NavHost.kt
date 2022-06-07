@@ -30,7 +30,9 @@ sealed class ListScreenStatus {
     data class Students(
         val practice: String = "",
         val task: String = "",
-        var listStudents: List<StudentDomain> = listOf()
+        var listStudents: List<StudentDomain> = listOf(),
+        var saveCheckStudent: (StudentDomain) -> Unit = {},
+        val deleteStudent: () -> Unit = {}
     ) : ListScreenStatus()
 }
 
@@ -74,8 +76,8 @@ fun NavHost(modifier: Modifier = Modifier) {
                 text = stringResource(id = R.string.navbar_tasks_text),
                 iconRight = Icons.Filled.MoreVert,
                 icoRightOnClick = {},
-                onClickItemList = {
-                        practice: String, task:String  -> navController.navigate("list_students/$practice/$task")
+                onClickItemList = { practice: String, task: String ->
+                    navController.navigate("list_students/$practice/$task")
                 },
                 listStatus = ListScreenStatus.Tasks(practice = practice!!),
                 viewModel = hiltViewModel<ListScreenViewModel>(),
@@ -95,7 +97,7 @@ fun NavHost(modifier: Modifier = Modifier) {
                 text = stringResource(id = R.string.navbar_students_text),
                 iconRight = Icons.Filled.MoreVert,
                 icoRightOnClick = {},
-                onClickItemList = {_,_ ->},
+                onClickItemList = { _, _ -> },
                 listStatus = ListScreenStatus.Students(practice = practice!!, task = task!!),
                 viewModel = listScreenViewModel,
             )

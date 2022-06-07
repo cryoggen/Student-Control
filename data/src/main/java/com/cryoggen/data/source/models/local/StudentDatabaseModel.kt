@@ -18,6 +18,7 @@ data class StudentDatabaseModel constructor(
 fun List<StudentDatabaseModel>.asDomainModel(): List<StudentDomain> {
     return map {
         StudentDomain(
+            id = it.id,
             practice = it.practice,
             task = it.task,
             name = it.name,
@@ -29,6 +30,7 @@ fun List<StudentDatabaseModel>.asDomainModel(): List<StudentDomain> {
 fun List<StudentDomain>.asDatabaseModel(): List<StudentDatabaseModel> {
     return map {
         StudentDatabaseModel(
+            id = it.id,
             practice = it.practice,
             task = it.task,
             name = it.name,

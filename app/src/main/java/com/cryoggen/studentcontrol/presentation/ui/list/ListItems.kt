@@ -1,6 +1,5 @@
 package com.cryoggen.studentcontrol
 
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,30 +14,44 @@ fun ListItems(
     onClick: (String, String) -> Unit,
     listStatus: ListScreenStatus
 ) {
-    when (listStatus){
+    when (listStatus) {
         is ListScreenStatus.Practices -> {
             LazyColumn(modifier = Modifier.padding(vertical = 0.dp)) {
                 this.items(items = listStatus.listPractices) { practice ->
-                    ItemListStudentControl(item = practice, onClick = {onClick(practice,"")}, listStatus = listStatus)
+                    ItemListStudentControl(
+                        item = practice,
+                        onClick = { onClick(practice, "") },
+                        listStatus = listStatus,
+                    )
                 }
             }
         }
         is ListScreenStatus.Tasks -> {
             LazyColumn(modifier = Modifier.padding(vertical = 0.dp)) {
                 this.items(items = listStatus.listTasks) { task ->
-                    ItemListStudentControl(item = task, onClick = {onClick(listStatus.practice,task)}, listStatus = listStatus)
+                    ItemListStudentControl(
+                        item = task,
+                        onClick = { onClick(listStatus.practice, task) },
+                        listStatus = listStatus,
+                    )
                 }
             }
         }
         is ListScreenStatus.Students -> {
             LazyColumn(modifier = Modifier.padding(vertical = 0.dp)) {
                 this.items(items = listStatus.listStudents) { student ->
-                    ItemListStudentControl(item = student.name , checkedStudent = student.check, listStatus = listStatus)
+                    ItemListStudentControl(
+                        item = student.name,
+                        checkedStudent = student.check,
+                        saveCheckStudent = {
+                            student.check = !student.check
+                            listStatus.saveCheckStudent(student) },
+                        listStatus = listStatus
+                    )
                 }
             }
         }
     }
-
 
 
 }
