@@ -8,16 +8,17 @@ import com.cryoggen.data.source.models.local.StudentDatabaseModel
 interface StudentsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(students: List<StudentDatabaseModel>)
+    suspend fun insertStudents(students: List<StudentDatabaseModel>)
 
     @Query("select distinct practice from StudentDatabaseModel")
-    fun getPractices(): List<String>
+    suspend fun getPractices(): List<String>
+
     //"distinct" - returns non-duplicate values
-    @Query("select distinct task from StudentDatabaseModel where practice = :practice" )
-    fun getTasks(practice: String): List<String>
+    @Query("select distinct task from StudentDatabaseModel where practice = :practice")
+    suspend fun getTasks(practice: String): List<String>
 
     @Query("select * from StudentDatabaseModel  where practice = :practice and task = :task")
-     fun getStudents(practice: String, task: String): List<StudentDatabaseModel>
+    suspend fun getStudents(practice: String, task: String): List<StudentDatabaseModel>
 
 }
 

@@ -12,7 +12,7 @@ import com.cryoggen.studentcontrol.presentation.ui.navhost.NavHost
 import com.cryoggen.studentcontrol.presentation.ui.theme.StudentControlTheme
 import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

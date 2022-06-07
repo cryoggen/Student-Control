@@ -30,5 +30,8 @@ class DomainModule {
         return GetTasksUseCase(studentControlRepository)
     }
 
-
+    @Provides
+    fun provideInsertStudentsUseCase(studentControlRepository: StudentControlRepository): InsertStudentsUseCase {
+        return InsertStudentsUseCase(studentControlRepository)
+    }
 }

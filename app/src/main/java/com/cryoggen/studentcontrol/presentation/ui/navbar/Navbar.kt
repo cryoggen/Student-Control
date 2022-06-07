@@ -17,7 +17,7 @@ fun Navbar(
     text: String,
     icoRightOnClick: () -> Unit,
     iconRight: ImageVector,
-    tintIconRight: Color = MaterialTheme.colors.onPrimary
+    tintIconRight: Color = MaterialTheme.colors.onPrimary,
 ) {
     Row(
         modifier = Modifier.padding(8.dp)
@@ -35,7 +35,7 @@ fun Navbar(
         IcoRightNavbar(
             icoRightOnClick = icoRightOnClick,
             iconRight = iconRight,
-            tintIconRight = tintIconRight
+            tintIconRight = tintIconRight,
         )
 
     }
