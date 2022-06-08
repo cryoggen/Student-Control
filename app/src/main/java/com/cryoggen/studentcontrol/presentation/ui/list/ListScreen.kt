@@ -7,8 +7,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,24 +34,22 @@ fun ListScreen(
     icoRightOnClick: () -> Unit
 ) {
 
-    val practices: List<String> by viewModel.practices.observeAsState(initial = listOf(""))
-    val tasks: List<String> by viewModel.tasks.observeAsState(initial = listOf(""))
-    val students: List<StudentDomain> by viewModel.students.observeAsState(
-        initial = listOf(
-            StudentDomain(name ="", practice = "", task = "")
-        )
-    )
 
     when (listStatus) {
         is ListScreenStatus.Practices -> {
+            val practices: List<String> by viewModel.practices.observeAsState(initial = listOf())
             viewModel.getPractices()
             listStatus.listPractices = practices
         }
         is ListScreenStatus.Tasks -> {
+            val tasks: List<String> by viewModel.tasks.observeAsState(initial = listOf())
             viewModel.getTasks(practice = listStatus.practice)
             listStatus.listTasks = tasks
         }
         is ListScreenStatus.Students -> {
+            val students: List<StudentDomain> by viewModel.students.observeAsState(
+                initial = listOf()
+            )
             viewModel.getStudents(practice = listStatus.practice, task = listStatus.task)
             listStatus.listStudents = students
             listStatus.saveCheckStudent = { student:StudentDomain -> viewModel.insertStudents(listOf(student))}

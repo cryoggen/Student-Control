@@ -22,7 +22,6 @@ class ListScreenViewModel @Inject constructor(
     private val insertStudentsUseCase: InsertStudentsUseCase,
 ) : ViewModel() {
 
-
     private val _students = MutableLiveData<List<StudentDomain>>()
     val students: LiveData<List<StudentDomain>>
     get() = _students

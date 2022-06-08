@@ -13,14 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.cryoggen.domain.models.StudentDomain
 import com.cryoggen.studentcontrol.presentation.ui.navhost.ListScreenStatus
 
 
 @Composable
 fun ItemListStudentControl(
     item: String,
-    checkedStudent: Boolean = false,
+    checked: Boolean = false,
     onClick: () -> Unit = {},
     listStatus: ListScreenStatus,
     saveCheckStudent: () -> Unit = {}
@@ -33,8 +32,6 @@ fun ItemListStudentControl(
     ) {
 
 
-        var checked by remember { mutableStateOf(checkedStudent) }
-
         Row(
             modifier = Modifier
                 .fillMaxSize()
@@ -44,8 +41,7 @@ fun ItemListStudentControl(
             if (listStatus is ListScreenStatus.Students) {
                 Checkbox(
                     checked = checked,
-                    onCheckedChange = { checked = !checked
-                        saveCheckStudent () },
+                    onCheckedChange = {saveCheckStudent()},
                     enabled = true,
                     colors = CheckboxDefaults.colors(
                         checkedColor = MaterialTheme.colors.onSurface,
