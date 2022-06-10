@@ -1,6 +1,5 @@
 package com.cryoggen.studentcontrol.presentation.ui.list
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -11,80 +10,81 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cryoggen.domain.models.StudentDomain
 import com.cryoggen.studentcontrol.R
-import com.cryoggen.studentcontrol.presentation.ui.navhost.ListScreenStatus
-import com.cryoggen.studentcontrol.ListItems
+import com.cryoggen.studentcontrol.ScreenStudentControlList
+import com.cryoggen.studentcontrol.presentation.ui.menu.MenuScreen
 import com.cryoggen.studentcontrol.presentation.ui.navbar.Navbar
 
 
 @Composable
-fun ListScreen(
-    onClickItemList: (String, String) -> Unit,
-    onClickFloatingButton: () -> Unit = {},
-    listStatus: ListScreenStatus,
-    viewModel: ListScreenViewModel,
-    icoLeftOnClick: () -> Unit,
-    iconLeft: ImageVector,
-    text: String,
-    iconRight: ImageVector,
-    icoRightOnClick: () -> Unit
+fun ScreenStudentControl(
+    screenState: ScreenState,
+    viewModel: ScreenStudentControlViewModel,
 ) {
 
+    val menuOpen by remember { mutableStateOf(false) }
 
-    when (listStatus) {
-        is ListScreenStatus.Practices -> {
+    when (screenState) {
+        is ScreenState.Practices -> {
             val practices: List<String> by viewModel.practices.observeAsState(initial = listOf())
             viewModel.getPractices()
-            listStatus.listPractices = practices
+            screenState.listPractices = practices
         }
-        is ListScreenStatus.Tasks -> {
+
+        is ScreenState.Tasks -> {
             val tasks: List<String> by viewModel.tasks.observeAsState(initial = listOf())
-            viewModel.getTasks(practice = listStatus.practice)
-            listStatus.listTasks = tasks
+            viewModel.getTasks(practice = screenState.practice)
+            screenState.listTasks = tasks
         }
-        is ListScreenStatus.Students -> {
+
+        is ScreenState.Students -> {
             val students: List<StudentDomain> by viewModel.students.observeAsState(
                 initial = listOf()
             )
-            viewModel.getStudents(practice = listStatus.practice, task = listStatus.task)
-            listStatus.listStudents = students
-            listStatus.saveCheckStudent = { student:StudentDomain -> viewModel.insertStudents(listOf(student))}
+
+            viewModel.getStudents(practice = screenState.practice, task = screenState.task)
+            screenState.listStudents = students
+
+            screenState.saveCheckStudent =
+                { student: StudentDomain -> viewModel.insertStudents(listOf(student)) }
+
+            screenState.deleteStudent =
+                { student: StudentDomain ->
+                    viewModel.deleteStudents(listOf(student))
+                    viewModel.getStudents(practice = screenState.practice, task = screenState.task)
+                }
+
         }
+        is ScreenState.Edit -> {}
     }
 
 
     Column(modifier = Modifier.padding(0.dp)) {
         Navbar(
-            icoLeftOnClick = icoLeftOnClick,
-            iconLeft = iconLeft,
-            text = text,
-            icoRightOnClick = icoRightOnClick,
-            iconRight = iconRight,
-            )
-        Box(
+            screenState = screenState
+        )
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(0.dp)
         ) {
-            Box() {
-                ListItems(
-                    onClick = onClickItemList,
-                    listStatus = listStatus
+            Column() {
+                ScreenStudentControlList(
+                    screenStatus = screenState
                 )
             }
 
-            if (listStatus is ListScreenStatus.Practices) {
+            if (screenState is ScreenState.Practices) {
                 Box(
                     contentAlignment = Alignment.BottomEnd, modifier = Modifier
                         .padding(vertical = 16.dp, horizontal = 16.dp)
                         .fillMaxSize()
                 ) {
                     FloatingActionButton(
-                        onClick = onClickFloatingButton,
+                        onClick = screenState.floatingButtonOnClick,
                         backgroundColor = MaterialTheme.colors.surface
                     ) {
                         Icon(
@@ -96,5 +96,13 @@ fun ListScreen(
             }
         }
     }
+    if (menuOpen) {
+        MenuScreen()
+    }
 }
+
+
+
+
+
 

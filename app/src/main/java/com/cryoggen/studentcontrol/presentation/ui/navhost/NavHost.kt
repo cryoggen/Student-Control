@@ -1,7 +1,5 @@
 package com.cryoggen.studentcontrol.presentation.ui.navhost
 
-import android.util.Log
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
@@ -12,35 +10,19 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.cryoggen.domain.models.StudentDomain
-import com.cryoggen.studentcontrol.NewPracticeScreen
-import com.cryoggen.studentcontrol.presentation.ui.list.ListScreen
+import com.cryoggen.studentcontrol.presentation.ui.list.ScreenStudentControl
 import com.cryoggen.studentcontrol.R
 import com.cryoggen.studentcontrol.presentation.ui.edit.EditPracticeScreenViewModel
-import com.cryoggen.studentcontrol.presentation.ui.list.ListScreenViewModel
-
-sealed class ListScreenStatus {
-
-
-    data class Practices(var listPractices: List<String> = listOf()) : ListScreenStatus()
-
-    data class Tasks(val practice: String = "", var listTasks: List<String> = listOf()) :
-        ListScreenStatus()
-
-    data class Students(
-        val practice: String = "",
-        val task: String = "",
-        var listStudents: List<StudentDomain> = listOf(),
-        var saveCheckStudent: (StudentDomain) -> Unit = {},
-        val deleteStudent: () -> Unit = {}
-    ) : ListScreenStatus()
-}
+import com.cryoggen.studentcontrol.presentation.ui.edit.EditPracticeScreen
+import com.cryoggen.studentcontrol.presentation.ui.list.ScreenState
+import com.cryoggen.studentcontrol.presentation.ui.list.ScreenStudentControlViewModel
+import com.cryoggen.studentcontrol.presentation.ui.list.NavBar
 
 
 @Composable
 fun NavHost(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
-    val listScreenViewModel = hiltViewModel<ListScreenViewModel>()
+    val screenStudentControlViewModel = hiltViewModel<ScreenStudentControlViewModel>()
     val editPracticeScreenViewModel = hiltViewModel<EditPracticeScreenViewModel>()
     androidx.navigation.compose.NavHost(
         navController = navController,
@@ -48,18 +30,30 @@ fun NavHost(modifier: Modifier = Modifier) {
         modifier = modifier
     ) {
         composable("list_practices") {
-            ListScreen(
-                icoLeftOnClick = {},
+
+            val itemListOnClickItem = { practice: String ->
+                navController.navigate("list_tasks/$practice")
+            }
+
+            val floatingButtonOnClick = { navController.navigate("new_item_screen") }
+
+            val navBarTitleText = stringResource(id = R.string.navbar_practices_title_text)
+            val navBar = NavBar(
                 iconLeft = Icons.Filled.House,
-                text = stringResource(id = R.string.navbar_practices_text),
                 iconRight = Icons.Filled.Person,
-                icoRightOnClick = {},
-                onClickItemList = { practice: String, _ ->
-                    navController.navigate("list_tasks/$practice")
-                },
-                onClickFloatingButton = { navController.navigate("new_item_screen") },
-                listStatus = ListScreenStatus.Practices(),
-                viewModel = listScreenViewModel
+                titleText = navBarTitleText
+            )
+
+            val screenState =
+                ScreenState.Practices(
+                    itemListOnClickItem = itemListOnClickItem,
+                    floatingButtonOnClick = floatingButtonOnClick,
+                    navBar = navBar
+                )
+
+            ScreenStudentControl(
+                screenState = screenState,
+                viewModel = screenStudentControlViewModel
             )
         }
 
@@ -69,54 +63,89 @@ fun NavHost(modifier: Modifier = Modifier) {
         ) { entry ->
 
             val practice = entry.arguments?.getString("practice")
+            val itemListOnClickItem = { practice: String, task: String ->
+                navController.navigate("list_students/$practice/$task")
+            }
+            val navBarIconLeftOnClick = { navController.navigate("list_practices") }
 
-            ListScreen(
-                icoLeftOnClick = { navController.navigate("list_practices") },
+            val navBar = NavBar(
                 iconLeft = Icons.Filled.ArrowBack,
-                text = stringResource(id = R.string.navbar_tasks_text),
                 iconRight = Icons.Filled.MoreVert,
-                icoRightOnClick = {},
-                onClickItemList = { practice: String, task: String ->
-                    navController.navigate("list_students/$practice/$task")
-                },
-                listStatus = ListScreenStatus.Tasks(practice = practice!!),
-                viewModel = hiltViewModel<ListScreenViewModel>(),
+                iconLeftOnClick = navBarIconLeftOnClick,
+                titleText = practice!!
+            )
+
+            val screenState =
+                ScreenState.Tasks(
+                    practice = practice!!,
+                    itemListOnClickItem = itemListOnClickItem,
+                    navBar = navBar
+                )
+
+            ScreenStudentControl(
+                screenState = screenState,
+                viewModel = hiltViewModel<ScreenStudentControlViewModel>(),
             )
         }
+
         composable(
             "list_students/{practice}/{task}",
             arguments = listOf(
                 navArgument("task") { type = NavType.StringType },
                 navArgument("practice") { type = NavType.StringType })
         ) { entry ->
+
             val practice = entry.arguments?.getString("practice")
             val task = entry.arguments?.getString("task")
-            ListScreen(
-                icoLeftOnClick = { navController.navigate("list_tasks/$practice") },
+            val navBarIconLeftOnClick = { navController.navigate("list_tasks/$practice") }
+
+            val navBar = NavBar(
                 iconLeft = Icons.Filled.ArrowBack,
-                text = stringResource(id = R.string.navbar_students_text),
                 iconRight = Icons.Filled.MoreVert,
-                icoRightOnClick = {},
-                onClickItemList = { _, _ -> },
-                listStatus = ListScreenStatus.Students(practice = practice!!, task = task!!),
-                viewModel = listScreenViewModel,
+                iconLeftOnClick = navBarIconLeftOnClick,
+                titleText = task!!
+            )
+
+            val screenState =
+                ScreenState.Students(
+                    practice = practice!!,
+                    task = task!!,
+                    navBar = navBar
+                )
+
+
+            ScreenStudentControl(
+                screenState = screenState,
+                viewModel = screenStudentControlViewModel,
             )
         }
 
         composable("new_item_screen") {
-            NewPracticeScreen(
-                icoLeftOnClick = { navController.navigate("list_practices") },
+
+            val navBarIconLeftOnClick = { navController.navigate("list_practices") }
+            val navBarTitleText = stringResource(id = R.string.new_practice)
+
+            val navBar = NavBar(
                 iconLeft = Icons.Filled.ArrowBack,
-                text = stringResource(id = R.string.new_practice),
                 iconRight = Icons.Filled.Check,
-                icoRightOnClick = {
-                    navController.navigate("list_practices")
-                },
-                tintIconRight = MaterialTheme.colors.secondary,
-                viewModel = editPracticeScreenViewModel
+                iconLeftOnClick = navBarIconLeftOnClick,
+                titleText = navBarTitleText
             )
 
+            val screenState =
+                ScreenState.Edit(
+                    navBar = navBar
+                )
+
+            EditPracticeScreen(
+                screenState = screenState,
+                viewModel = editPracticeScreenViewModel
+            )
         }
+
+//        composable("menu_list_task") {
+//            MenuScreen()
+//        }
     }
 }
 

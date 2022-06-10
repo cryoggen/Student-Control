@@ -1,4 +1,4 @@
-package com.cryoggen.studentcontrol
+package com.cryoggen.studentcontrol.presentation.ui.edit
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

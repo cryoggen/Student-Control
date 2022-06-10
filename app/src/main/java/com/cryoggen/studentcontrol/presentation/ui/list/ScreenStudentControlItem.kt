@@ -13,17 +13,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.cryoggen.studentcontrol.presentation.ui.navhost.ListScreenStatus
+import com.cryoggen.studentcontrol.presentation.ui.list.ScreenState
 
 
 @Composable
-fun ItemListStudentControl(
+fun ScreenStudentControlItem(
     item: String,
     checked: Boolean = false,
     onClick: () -> Unit = {},
-    listStatus: ListScreenStatus,
-    saveCheckStudent: () -> Unit = {}
-) {
+    screenStatus: ScreenState,
+    saveCheckStudent: () -> Unit = {},
+    deleteStudent: () -> Unit = {},
+
+    ) {
     Card(
         backgroundColor = MaterialTheme.colors.primary,
         modifier = Modifier
@@ -38,7 +40,7 @@ fun ItemListStudentControl(
                 .padding(16.dp)
 
         ) {
-            if (listStatus is ListScreenStatus.Students) {
+            if (screenStatus is ScreenState.Students) {
                 Checkbox(
                     checked = checked,
                     onCheckedChange = {saveCheckStudent()},
@@ -62,8 +64,9 @@ fun ItemListStudentControl(
                 )
 
             }
-            if (listStatus is ListScreenStatus.Students) {
-                IconButton(onClick = { }) {
+            if (screenStatus is ScreenState.Students) {
+
+                IconButton(onClick = { deleteStudent() }) {
                     Icon(
                         Icons.Filled.Close,
                         contentDescription = stringResource(id = R.string.button_close_description)

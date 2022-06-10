@@ -31,4 +31,8 @@ class StudentsLocalDataSourceImpl(private val studentDatabase: StudentDatabase) 
         studentDatabase.studentsDao.insertStudents(students)
     }
 
+    override suspend fun deleteStudents(students: List<StudentDatabaseModel>) {
+        studentDatabase.studentsDao.deleteStudents(students)
+    }
+
 }

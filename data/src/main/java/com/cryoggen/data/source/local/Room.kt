@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.*
 import com.cryoggen.data.source.models.local.StudentDatabaseModel
 
+
 @Dao
 interface StudentsDao {
 
@@ -19,6 +20,9 @@ interface StudentsDao {
 
     @Query("select * from StudentDatabaseModel  where practice = :practice and task = :task")
     suspend fun getStudents(practice: String, task: String): List<StudentDatabaseModel>
+
+    @Delete
+    suspend fun deleteStudents(students: List<StudentDatabaseModel>)
 
 }
 

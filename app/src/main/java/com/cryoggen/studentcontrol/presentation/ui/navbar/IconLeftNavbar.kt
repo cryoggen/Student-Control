@@ -12,23 +12,25 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cryoggen.studentcontrol.R
+import com.cryoggen.studentcontrol.presentation.ui.list.ScreenState
 
 @Composable
-fun IcoLeftNavbar(icoLeftOnClick: () -> Unit, iconLeft: ImageVector) {
+fun IconLeftNavbar(iconLeftOnClick: () -> Unit, iconLeft: ImageVector, screenState: ScreenState) {
     Box(
         modifier = Modifier
             .padding(0.dp)
     ) {
-        if (iconLeft != Icons.Filled.House) {
-            IconButton(onClick = icoLeftOnClick) {
+        if (screenState is ScreenState.Practices) {
+            IconButton(onClick = { }, enabled = false) {
+
+            }
+
+        } else {
+            IconButton(onClick = iconLeftOnClick) {
                 Icon(
                     iconLeft,
                     contentDescription = stringResource(id = R.string.nav_bar_arrow_back_description)
                 )
-            }
-        } else {
-            IconButton(onClick = { }, enabled = false) {
-
             }
         }
 

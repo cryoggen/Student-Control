@@ -13,11 +13,11 @@
     <string name="new_practice">New practice</string>
 
     //List practices
-    <string name="navbar_practices_text">Practices</string>
+    <string name="navbar_practices_title_text">Practices</string>
     //List tasks
-    <string name="navbar_tasks_text">Tasks</string>
+    <string name="navbar_tasks_title_text">Tasks</string>
     //List students
-    <string name="navbar_students_text">Students</string>
+    <string name="navbar_students_title_text">Students</string>
 
 
     //Descriptions
@@ -25,4 +25,13 @@
     <string name="button_add_new_practice_description">Add new practice</string>
     <string name="nav_bar_menu_description">Menu</string>
     <string name="nav_bar_arrow_back_description">Arrow back</string>
+
+    //Menu
+    <string name="menu_practice">Menu practice</string>
+
+    //Snack Bar message
+    <string name="practice_not_introduced">Please enter the name of the practice</string>
+    <string name="tasks_not_introduced">Please enter at least one task name</string>
+    <string name="students_not_introduced">Please enter the name of the student</string>
+
 </resources>

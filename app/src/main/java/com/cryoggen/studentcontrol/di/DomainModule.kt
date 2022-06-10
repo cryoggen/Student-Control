@@ -34,4 +34,10 @@ class DomainModule {
     fun provideInsertStudentsUseCase(studentControlRepository: StudentControlRepository): InsertStudentsUseCase {
         return InsertStudentsUseCase(studentControlRepository)
     }
+
+    @Provides
+    fun provideDeleteStudentsUseCase(studentControlRepository: StudentControlRepository): DeleteStudentsUseCase {
+        return DeleteStudentsUseCase(studentControlRepository)
+    }
+
 }

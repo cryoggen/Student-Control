@@ -1,49 +1,80 @@
-package com.cryoggen.studentcontrol
+package com.cryoggen.studentcontrol.presentation.ui.edit
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.cryoggen.studentcontrol.presentation.ui.edit.EditFieldStatus
-import com.cryoggen.studentcontrol.presentation.ui.edit.EditPracticeScreenViewModel
-import com.cryoggen.studentcontrol.presentation.ui.edit.NewPracticeEditField
+import com.cryoggen.studentcontrol.R
+import com.cryoggen.studentcontrol.presentation.ui.list.ScreenState
 import com.cryoggen.studentcontrol.presentation.ui.navbar.Navbar
 
 @Composable
-fun NewPracticeScreen(
-    icoLeftOnClick: () -> Unit,
-    iconLeft: ImageVector,
-    text: String,
-    iconRight: ImageVector,
-    icoRightOnClick: () -> Unit,
-    tintIconRight: Color,
-    viewModel: EditPracticeScreenViewModel
+fun EditPracticeScreen(
+    viewModel: EditPracticeScreenViewModel,
+    screenState: ScreenState.Edit
 ) {
     var practice by remember { mutableStateOf("") }
     val tasks = remember { mutableStateListOf("") }
     val studentNames = remember { mutableStateListOf("") }
 
+    var savePracticeButtonClicked by remember {
+        mutableStateOf(false)
+    }
+
+    screenState.navBar.iconRightOnClick = {
+        savePracticeButtonClicked = true
+    }
+
+
+    when {
+
+        practice == "" && savePracticeButtonClicked -> {
+            Log.d("11111", "test")
+            SnackBar(stringResource(id = R.string.practice_not_introduced), stopSnackBar =  {
+                savePracticeButtonClicked = false
+            })
+
+        }
+        tasks[0] == "" && savePracticeButtonClicked -> {
+            SnackBar(stringResource(id = R.string.tasks_not_introduced), stopSnackBar =  {
+                savePracticeButtonClicked = false
+            })
+
+        }
+        studentNames[0] == "" && savePracticeButtonClicked -> {
+            SnackBar(stringResource(id = R.string.students_not_introduced), stopSnackBar =  {
+                savePracticeButtonClicked = false
+            })
+
+        }
+        savePracticeButtonClicked -> {
+            viewModel.insertStudents(
+                practice = practice,
+                tasks = tasks,
+                studentNames = studentNames
+            )
+           screenState.navBar.iconLeftOnClick()
+            Log.d("11111", "test")
+            savePracticeButtonClicked = false
+        }
+
+    }
+
     Column() {
         Navbar(
-            icoLeftOnClick = icoLeftOnClick,
-            iconLeft = iconLeft,
-            text = text,
-            iconRight = iconRight,
-            icoRightOnClick = {
-                viewModel.insertStudents(practice = practice, tasks = tasks, studentNames = studentNames)
-                icoRightOnClick()},
-            tintIconRight = tintIconRight
+            screenState = screenState
         )
         Column(
             modifier = Modifier
                 .padding(16.dp)
+                .verticalScroll(rememberScrollState())
 
         ) {
 
@@ -77,6 +108,7 @@ fun NewPracticeScreen(
                     editFieldStatus = EditFieldStatus.TASKS
                 )
             }
+
             NewPracticeScreenButton(
                 text = stringResource(id = R.string.new_task_name_text_button),
                 addNewEditField = { tasks.add("") }
@@ -107,4 +139,5 @@ fun NewPracticeScreen(
 
 
 }
+
 

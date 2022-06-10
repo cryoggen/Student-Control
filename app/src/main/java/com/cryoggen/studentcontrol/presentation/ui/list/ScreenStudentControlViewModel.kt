@@ -6,20 +6,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cryoggen.domain.models.StudentDomain
-import com.cryoggen.domain.usecase.GetPracticesUseCase
-import com.cryoggen.domain.usecase.GetStudentsUseCase
-import com.cryoggen.domain.usecase.GetTasksUseCase
-import com.cryoggen.domain.usecase.InsertStudentsUseCase
+import com.cryoggen.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ListScreenViewModel @Inject constructor(
+class ScreenStudentControlViewModel @Inject constructor(
     private val getPracticesUseCase: GetPracticesUseCase,
     private val getStudentsUseCase: GetStudentsUseCase,
     private val getTasksUseCase: GetTasksUseCase,
     private val insertStudentsUseCase: InsertStudentsUseCase,
+    private val deleteStudentsUseCase: DeleteStudentsUseCase,
 ) : ViewModel() {
 
     private val _students = MutableLiveData<List<StudentDomain>>()
@@ -57,6 +55,13 @@ class ListScreenViewModel @Inject constructor(
             insertStudentsUseCase.execute(listStudentDomain)
         }
     }
+
+    fun deleteStudents(listStudentDomain:List<StudentDomain>) {
+        viewModelScope.launch {
+            deleteStudentsUseCase.execute(listStudentDomain)
+        }
+    }
+
 
 }
 

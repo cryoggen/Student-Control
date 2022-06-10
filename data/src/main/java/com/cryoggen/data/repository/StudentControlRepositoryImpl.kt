@@ -23,6 +23,11 @@ import com.cryoggen.domain.repository.StudentControlRepository
          StudentControlLocalDataSource.insertStudents(listStudentsDataBaseModel)
      }
 
+     override suspend fun deleteStudents(students: List<StudentDomain>) {
+         val listStudentsDataBaseModel = students.asDatabaseModel()
+         StudentControlLocalDataSource.deleteStudents(listStudentsDataBaseModel)
+     }
+
      override suspend fun getStudents(practice: String, task: String): List<StudentDomain> {
          val listStudentsDataBaseModel = StudentControlLocalDataSource.getStudents(practice = practice, task = task)
          return listStudentsDataBaseModel.asDomainModel()

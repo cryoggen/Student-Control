@@ -1,41 +1,58 @@
 package com.cryoggen.studentcontrol.presentation.ui.navbar
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.cryoggen.studentcontrol.presentation.ui.list.ScreenState
 
 
 @Composable
 fun Navbar(
-    icoLeftOnClick: () -> Unit,
-    iconLeft: ImageVector,
-    text: String,
-    icoRightOnClick: () -> Unit,
-    iconRight: ImageVector,
-    tintIconRight: Color = MaterialTheme.colors.onPrimary,
+    screenState: ScreenState,
 ) {
+
+    val navBar = when (screenState) {
+        is ScreenState.Practices -> {
+            screenState.navBar
+        }
+        is ScreenState.Tasks -> {
+            screenState.navBar
+        }
+        is ScreenState.Students -> {
+            screenState.navBar
+        }
+        is ScreenState.Students -> {
+            screenState.navBar
+        }
+        is ScreenState.Edit -> {
+            screenState.navBar
+        }
+    }
+
+
+
     Row(
         modifier = Modifier.padding(8.dp)
     ) {
-        IcoLeftNavbar(icoLeftOnClick = icoLeftOnClick, iconLeft = iconLeft)
+        IconLeftNavbar(
+            iconLeftOnClick = navBar.iconLeftOnClick,
+            iconLeft = navBar.iconLeft,
+            screenState = screenState
+        )
         Column(
             modifier = Modifier
                 .weight(1f)
                 .align(Alignment.CenterVertically),
-            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextCenterNavbar(text = text)
+            TextCenterNavbar(text = navBar.titleText)
         }
-        IcoRightNavbar(
-            icoRightOnClick = icoRightOnClick,
-            iconRight = iconRight,
-            tintIconRight = tintIconRight,
+        IconRightNavbar(
+            icoRightOnClick = navBar.iconRightOnClick,
+            iconRight = navBar.iconRight,
+            screenState = screenState
         )
 
     }
