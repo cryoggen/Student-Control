@@ -13,6 +13,7 @@ interface StudentsLocalDataSource {
     suspend fun insertPractice(practices: List<PracticeDatabaseModel>)
     suspend fun insertStudentControl(studentControlDatabaseModelList: List<StudentControlDatabaseModel>)
     suspend fun deleteStudent(studentId: String)
+    suspend fun deleteTaskStudent(taskId: String, studentId: String)
     suspend fun deleteTask(taskId: String)
     suspend fun deletePractice(practiceId: String)
 }

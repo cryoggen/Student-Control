@@ -45,6 +45,10 @@ class StudentsLocalDataSourceImpl(private val studentDatabase: StudentDatabase) 
         studentDatabase.studentsDao.deleteStudentControl(studentId)
     }
 
+    override suspend fun deleteTaskStudent(taskId: String, studentId: String) {
+        studentDatabase.studentsDao.deleteTaskStudent(taskId = taskId, studentId = studentId)
+    }
+
     override suspend fun deleteTask(taskId: String) {
         studentDatabase.studentsDao.deleteTask(taskId)
         studentDatabase.studentsDao.deleteTaskStudentControl(taskId)

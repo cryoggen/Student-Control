@@ -41,6 +41,10 @@ import com.cryoggen.domain.repository.StudentControlRepository
          studentsLocalDataSource.deleteStudent(studentId)
      }
 
+     override suspend fun deleteTaskStudent(taskId: String, studentId: String) {
+      return studentsLocalDataSource.deleteTaskStudent(taskId = taskId,studentId = studentId)
+     }
+
      override suspend fun deleteTask(taskId: String) {
          studentsLocalDataSource.deleteTask(taskId)
      }
@@ -48,7 +52,6 @@ import com.cryoggen.domain.repository.StudentControlRepository
      override suspend fun deletePractice(practiceId: String) {
          studentsLocalDataSource.deletePractice(practiceId)
      }
-
 
 
      override suspend fun getStudentControlList(practiceId: String, taskId: String): List<StudentControlDomain> {

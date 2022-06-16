@@ -51,9 +51,8 @@ fun ScreenStudentControlList(
         is ScreenState.Students -> {
             LazyColumn(modifier = Modifier.padding(vertical = 0.dp)) {
                 this.items(items = screenStatus.checkedStudentDomainList) { checkedStudent ->
-
+                    Log.d("11111",checkedStudent.toString() )
                     var chekStudent by remember { mutableStateOf(checkedStudent.check) }
-
 
 
                     val saveCheckStudent = {
@@ -74,7 +73,7 @@ fun ScreenStudentControlList(
 
                     ScreenStudentControlItem(
                         saveCheckStudent = saveCheckStudent,
-                        deleteStudent = { screenStatus.deleteStudent(checkedStudent.nameId) },
+                        deleteStudent = { screenStatus.deleteTaskStudent(checkedStudent.taskId,checkedStudent.nameId) },
                         item = checkedStudent.name,
                         checked = chekStudent,
                         screenStatus = screenStatus

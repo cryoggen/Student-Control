@@ -33,7 +33,7 @@ sealed class ScreenState {
         val taskName: String,
         var checkedStudentDomainList: List<CheckedStudentDomain> = listOf(),
         var saveCheckStudent: (StudentControlDomain) -> Unit = {},
-        var deleteStudent: (String) -> Unit = {}
+        var deleteTaskStudent: (String, String) -> Unit = {_,_ ->}
     ) : ScreenState()
 
     data class NewPractice(

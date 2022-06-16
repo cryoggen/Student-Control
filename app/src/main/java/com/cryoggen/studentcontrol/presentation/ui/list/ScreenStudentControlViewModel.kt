@@ -16,21 +16,27 @@ class ScreenStudentControlViewModel @Inject constructor(
     private val getPracticesUseCase: GetPracticesUseCase,
     private val getStudentsUseCase: GetStudentsUseCase,
     private val getTasksUseCase: GetTasksUseCase,
+    private val getStudentsControlListUseCase: GetStudentsControlListUseCase,
     private val insertStudentControlUseCase: InsertStudentControlUseCase,
     private val deleteStudentUseCase: DeleteStudentUseCase,
+    private val deleteTaskStudentUseCase: DeleteTaskStudentUseCase
 ) : ViewModel() {
 
     private val _students = MutableLiveData<List<CheckedStudentDomain>>()
     val students: LiveData<List<CheckedStudentDomain>>
-    get() = _students
+        get() = _students
+
+    private val _studentsControlList = MutableLiveData<List<StudentControlDomain>>()
+    val studentsControlList: LiveData<List<StudentControlDomain>>
+        get() = _studentsControlList
 
     private val _tasks = MutableLiveData<List<TaskDomain>>()
     val tasks: LiveData<List<TaskDomain>>
-    get() = _tasks
+        get() = _tasks
 
     private val _practices = MutableLiveData<List<PracticeDomain>>()
     val practices: LiveData<List<PracticeDomain>>
-    get() = _practices
+        get() = _practices
 
     fun getStudents(practiceId: String, taskId: String) {
         viewModelScope.launch {
@@ -44,25 +50,37 @@ class ScreenStudentControlViewModel @Inject constructor(
         }
     }
 
-     fun getPractices() {
+    fun getPractices() {
         viewModelScope.launch {
             _practices.value = getPracticesUseCase.execute()
         }
     }
 
-    fun insertStudentsControlDomain(studentControlDomainList :List<StudentControlDomain>) {
-        Log.d("11111", studentControlDomainList.toString())
+    fun insertStudentsControlDomain(studentControlDomainList: List<StudentControlDomain>) {
         viewModelScope.launch {
             insertStudentControlUseCase.execute(studentControlDomainList = studentControlDomainList)
         }
     }
 
-    fun deleteStudent(studentId:String) {
+    fun deleteStudent(studentId: String) {
         viewModelScope.launch {
             deleteStudentUseCase.execute(studentId)
         }
     }
 
+    fun deleteTaskStudent(practiceId: String, taskId: String, studentId: String, ) {
+        viewModelScope.launch {
+            deleteTaskStudentUseCase.execute(taskId = taskId, studentId = studentId)
+            getStudents(practiceId = practiceId,taskId = taskId )
+        }
+    }
+
+    fun getStudentsControlListUseCase(practiceId: String, taskId: String) {
+        viewModelScope.launch {
+            _studentsControlList.value =
+                getStudentsControlListUseCase.execute(practiceId = practiceId, taskId = taskId)
+        }
+    }
 
 }
 

@@ -46,6 +46,11 @@ class DomainModule {
     }
 
     @Provides
+    fun provideGetStudentsControlListUseCase(studentControlRepository: StudentControlRepository): GetStudentsControlListUseCase {
+        return GetStudentsControlListUseCase(studentControlRepository)
+    }
+
+    @Provides
     fun provideGetStudentsUseCase(studentControlRepository: StudentControlRepository): GetStudentsUseCase {
         return GetStudentsUseCase(studentControlRepository)
     }
@@ -63,6 +68,11 @@ class DomainModule {
     @Provides
     fun provideInsertTasksUseCase(studentControlRepository: StudentControlRepository): InsertTasksUseCase {
         return InsertTasksUseCase(studentControlRepository)
+    }
+
+    @Provides
+    fun provideDeleteTaskStudentUseCase(studentControlRepository: StudentControlRepository): DeleteTaskStudentUseCase {
+        return DeleteTaskStudentUseCase(studentControlRepository)
     }
 
 }

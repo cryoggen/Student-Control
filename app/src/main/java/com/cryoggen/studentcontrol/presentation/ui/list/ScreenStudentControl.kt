@@ -1,6 +1,5 @@
 package com.cryoggen.studentcontrol.presentation.ui.list
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -42,7 +41,7 @@ fun ScreenStudentControl(
             val tasks: List<TaskDomain> by viewModel.tasks.observeAsState(initial = listOf())
             viewModel.getTasks(screenState.practiceId)
             screenState.listTasks = tasks
-            screenState.navBar.iconRightOnClick = {menuOpen = true}
+            screenState.navBar.iconRightOnClick = { menuOpen = true }
         }
 
         is ScreenState.Students -> {
@@ -50,18 +49,25 @@ fun ScreenStudentControl(
                 initial = listOf()
             )
 
+
             screenState.checkedStudentDomainList = checkedStudentDomainList
 
 
             screenState.saveCheckStudent =
-                { studentControlDomain: StudentControlDomain -> viewModel.insertStudentsControlDomain(listOf(studentControlDomain
-                )) }
-
-            screenState.deleteStudent =
-                { studentId: String ->
-                    viewModel.deleteStudent(studentId)
-                    viewModel.getStudents(practiceId = screenState.practiceId, taskId = screenState.taskId)
+                { studentControlDomain: StudentControlDomain ->
+                    viewModel.insertStudentsControlDomain(
+                        listOf(
+                            studentControlDomain
+                        )
+                    )
                 }
+
+            screenState.deleteTaskStudent =
+                { taskId: String, studentId: String ->
+                  viewModel.deleteTaskStudent(practiceId = screenState.practiceId, taskId = taskId, studentId = studentId)
+
+                }
+
             viewModel.getStudents(practiceId = screenState.practiceId, taskId = screenState.taskId)
         }
         else -> {}

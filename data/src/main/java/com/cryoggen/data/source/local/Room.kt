@@ -43,6 +43,9 @@ interface StudentsDao {
     @Query("delete from StudentControlDatabaseModel where id = :studentId")
     suspend fun deleteStudentControl(studentId: String)
 
+    @Query("delete from StudentControlDatabaseModel where taskId= :taskId and nameId = :studentId")
+    suspend fun deleteTaskStudent(taskId: String, studentId: String)
+
     @Query("delete from StudentDatabaseModel where id = :studentId")
     suspend fun deleteStudent(studentId: String)
 
@@ -57,6 +60,8 @@ interface StudentsDao {
 
     @Query("delete from StudentControlDatabaseModel where practiceId = :practiceId")
     suspend fun deletePracticeStudentControl(practiceId: String)
+
+
 
 }
 

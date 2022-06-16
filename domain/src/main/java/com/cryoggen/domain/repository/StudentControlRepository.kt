@@ -12,6 +12,7 @@ interface StudentControlRepository {
     suspend fun insertPractice(practices: List<PracticeDomain>)
     suspend fun insertStudentControl(studentControlDomainList: List<StudentControlDomain>)
     suspend fun deleteStudent(studentId: String)
+    suspend fun deleteTaskStudent(taskId: String, studentId: String)
     suspend fun deleteTask(taskId: String)
     suspend fun deletePractice(practiceId: String)
 
