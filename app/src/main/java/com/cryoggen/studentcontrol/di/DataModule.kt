@@ -22,10 +22,10 @@ class DataModule {
     @Provides
     @Singleton
     fun provideStudentControlRepository(
-        StudentControlLocalDataSource: StudentsLocalDataSource
+        studentsLocalDataSource: StudentsLocalDataSource
     ): StudentControlRepository {
         return StudentControlRepositoryImpl(
-            StudentControlLocalDataSource = StudentControlLocalDataSource,
+            studentsLocalDataSource = studentsLocalDataSource,
         )
     }
 

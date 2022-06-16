@@ -1,7 +1,6 @@
 package com.cryoggen.studentcontrol.di
 
 
-import androidx.lifecycle.ViewModelProvider
 import com.cryoggen.domain.repository.StudentControlRepository
 import com.cryoggen.domain.usecase.*
 import dagger.Module
@@ -19,11 +18,6 @@ class DomainModule {
         return GetPracticesUseCase(studentControlRepository)
     }
 
-    @Provides
-    fun provideGetStudentsUseCase(studentControlRepository: StudentControlRepository): GetStudentsUseCase {
-        return GetStudentsUseCase(studentControlRepository)
-    }
-
 
     @Provides
     fun provideGetTasksUseCase(studentControlRepository: StudentControlRepository): GetTasksUseCase {
@@ -36,8 +30,39 @@ class DomainModule {
     }
 
     @Provides
-    fun provideDeleteStudentsUseCase(studentControlRepository: StudentControlRepository): DeleteStudentsUseCase {
-        return DeleteStudentsUseCase(studentControlRepository)
+    fun provideDeleteStudentsUseCase(studentControlRepository: StudentControlRepository): DeleteStudentUseCase {
+        return DeleteStudentUseCase(studentControlRepository)
+    }
+
+
+    @Provides
+    fun provideDeletePracticeUseCase(studentControlRepository: StudentControlRepository): DeletePracticeUseCase {
+        return DeletePracticeUseCase(studentControlRepository)
+    }
+
+    @Provides
+    fun provideDeleteTaskUseCase(studentControlRepository: StudentControlRepository): DeleteTaskUseCase {
+        return DeleteTaskUseCase(studentControlRepository)
+    }
+
+    @Provides
+    fun provideGetStudentsUseCase(studentControlRepository: StudentControlRepository): GetStudentsUseCase {
+        return GetStudentsUseCase(studentControlRepository)
+    }
+
+    @Provides
+    fun provideInsertPracticeUseCase(studentControlRepository: StudentControlRepository): InsertPracticeUseCase {
+        return InsertPracticeUseCase(studentControlRepository)
+    }
+
+    @Provides
+    fun provideInsertStudentControlUseCase(studentControlRepository: StudentControlRepository): InsertStudentControlUseCase {
+        return InsertStudentControlUseCase(studentControlRepository)
+    }
+
+    @Provides
+    fun provideInsertTasksUseCase(studentControlRepository: StudentControlRepository): InsertTasksUseCase {
+        return InsertTasksUseCase(studentControlRepository)
     }
 
 }

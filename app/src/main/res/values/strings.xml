@@ -11,6 +11,7 @@
     <string name="new_task_name_text_button">+ TASK</string>
     <string name="new_student_text_button">+ STUDENT</string>
     <string name="new_practice">New practice</string>
+    <string name="edit_practice">Edit practice</string>
 
     //List practices
     <string name="navbar_practices_title_text">Practices</string>

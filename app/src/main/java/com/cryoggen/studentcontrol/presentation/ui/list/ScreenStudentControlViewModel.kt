@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cryoggen.domain.models.StudentDomain
+import com.cryoggen.domain.models.*
 import com.cryoggen.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -16,31 +16,31 @@ class ScreenStudentControlViewModel @Inject constructor(
     private val getPracticesUseCase: GetPracticesUseCase,
     private val getStudentsUseCase: GetStudentsUseCase,
     private val getTasksUseCase: GetTasksUseCase,
-    private val insertStudentsUseCase: InsertStudentsUseCase,
-    private val deleteStudentsUseCase: DeleteStudentsUseCase,
+    private val insertStudentControlUseCase: InsertStudentControlUseCase,
+    private val deleteStudentUseCase: DeleteStudentUseCase,
 ) : ViewModel() {
 
-    private val _students = MutableLiveData<List<StudentDomain>>()
-    val students: LiveData<List<StudentDomain>>
+    private val _students = MutableLiveData<List<CheckedStudentDomain>>()
+    val students: LiveData<List<CheckedStudentDomain>>
     get() = _students
 
-    private val _tasks = MutableLiveData<List<String>>()
-    val tasks: LiveData<List<String>>
+    private val _tasks = MutableLiveData<List<TaskDomain>>()
+    val tasks: LiveData<List<TaskDomain>>
     get() = _tasks
 
-    private val _practices = MutableLiveData<List<String>>()
-    val practices: LiveData<List<String>>
+    private val _practices = MutableLiveData<List<PracticeDomain>>()
+    val practices: LiveData<List<PracticeDomain>>
     get() = _practices
 
-    fun getStudents(practice: String, task: String) {
+    fun getStudents(practiceId: String, taskId: String) {
         viewModelScope.launch {
-            _students.value = getStudentsUseCase.execute(practice = practice, task = task)
+            _students.value = getStudentsUseCase.execute(practiceId = practiceId, taskId = taskId)
         }
     }
 
-    fun getTasks(practice: String) {
+    fun getTasks(practiceId: String) {
         viewModelScope.launch {
-            _tasks.value = getTasksUseCase.execute(practice = practice)
+            _tasks.value = getTasksUseCase.execute(practiceId = practiceId)
         }
     }
 
@@ -50,15 +50,16 @@ class ScreenStudentControlViewModel @Inject constructor(
         }
     }
 
-    fun insertStudents(listStudentDomain:List<StudentDomain>) {
+    fun insertStudentsControlDomain(studentControlDomainList :List<StudentControlDomain>) {
+        Log.d("11111", studentControlDomainList.toString())
         viewModelScope.launch {
-            insertStudentsUseCase.execute(listStudentDomain)
+            insertStudentControlUseCase.execute(studentControlDomainList = studentControlDomainList)
         }
     }
 
-    fun deleteStudents(listStudentDomain:List<StudentDomain>) {
+    fun deleteStudent(studentId:String) {
         viewModelScope.launch {
-            deleteStudentsUseCase.execute(listStudentDomain)
+            deleteStudentUseCase.execute(studentId)
         }
     }
 

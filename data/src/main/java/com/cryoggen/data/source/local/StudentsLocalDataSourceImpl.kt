@@ -1,38 +1,58 @@
 package com.cryoggen.data.source.local
 
-import android.util.Log
-import com.cryoggen.data.source.models.local.StudentDatabaseModel
-import com.cryoggen.data.source.models.local.asDomainModel
-import java.lang.Exception
+import com.cryoggen.data.source.models.local.*
+
 
 class StudentsLocalDataSourceImpl(private val studentDatabase: StudentDatabase) :
     StudentsLocalDataSource {
-    override suspend fun getPractices(): List<String> {
-        var practices = listOf<String>()
-        try {
-            practices = studentDatabase.studentsDao.getPractices()
-        } catch (e: Exception) {
+    override suspend fun getPractices(): List<PracticeDatabaseModel> {
+        return studentDatabase.studentsDao.getPractices()
 
-        }
-
-        return practices
     }
 
-    override suspend fun getTasks(practice: String): List<String> {
-        return studentDatabase.studentsDao.getTasks(practice = practice)
+    override suspend fun getTasks(practiceId:String): List<TaskDatabaseModel> {
+        return studentDatabase.studentsDao.getTasks(practiceId = practiceId)
     }
 
-
-    override suspend fun getStudents(practice: String, task: String): List<StudentDatabaseModel> {
-        return studentDatabase.studentsDao.getStudents(practice = practice, task = task)
+    override suspend fun getStudents(practiceId:String, taskId:String): List<CheckedStudentDatabaseModel> {
+        return studentDatabase.studentsDao.getStudents(practiceId = practiceId, taskId = taskId)
     }
 
     override suspend fun insertStudents(students: List<StudentDatabaseModel>) {
         studentDatabase.studentsDao.insertStudents(students)
     }
 
-    override suspend fun deleteStudents(students: List<StudentDatabaseModel>) {
-        studentDatabase.studentsDao.deleteStudents(students)
+    override suspend fun insertTasks(tasks: List<TaskDatabaseModel>) {
+        studentDatabase.studentsDao.insertTasks(tasks)
+    }
+
+    override suspend fun insertPractice(practices: List<PracticeDatabaseModel>) {
+        studentDatabase.studentsDao.insertPractice(practices)
+    }
+
+    override suspend fun insertStudentControl(studentControlDatabaseModelList: List<StudentControlDatabaseModel>) {
+        studentDatabase.studentsDao.insertStudentControl(studentControlDatabaseModelList)
+    }
+
+
+    override suspend fun getStudentControlList(practiceId: String, taskId: String): List<StudentControlDatabaseModel> {
+        return studentDatabase.studentsDao.getStudentControlList(practiceId = practiceId, taskId = taskId)
+    }
+
+
+    override suspend fun deleteStudent(studentId: String) {
+        studentDatabase.studentsDao.deleteStudent(studentId)
+        studentDatabase.studentsDao.deleteStudentControl(studentId)
+    }
+
+    override suspend fun deleteTask(taskId: String) {
+        studentDatabase.studentsDao.deleteTask(taskId)
+        studentDatabase.studentsDao.deleteTaskStudentControl(taskId)
+    }
+
+    override suspend fun deletePractice(practiceId: String) {
+        studentDatabase.studentsDao.deletePractice(practiceId)
+        studentDatabase.studentsDao.deletePracticeStudentControl(practiceId)
     }
 
 }

@@ -1,5 +1,6 @@
 package com.cryoggen.studentcontrol.presentation.ui.list
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -12,7 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.cryoggen.domain.models.StudentDomain
+import com.cryoggen.domain.models.CheckedStudentDomain
+import com.cryoggen.domain.models.PracticeDomain
+import com.cryoggen.domain.models.StudentControlDomain
+import com.cryoggen.domain.models.TaskDomain
 import com.cryoggen.studentcontrol.R
 import com.cryoggen.studentcontrol.ScreenStudentControlList
 import com.cryoggen.studentcontrol.presentation.ui.menu.MenuScreen
@@ -25,40 +29,43 @@ fun ScreenStudentControl(
     viewModel: ScreenStudentControlViewModel,
 ) {
 
-    val menuOpen by remember { mutableStateOf(false) }
+    var menuOpen by remember { mutableStateOf(false) }
 
     when (screenState) {
         is ScreenState.Practices -> {
-            val practices: List<String> by viewModel.practices.observeAsState(initial = listOf())
+            val practices: List<PracticeDomain> by viewModel.practices.observeAsState(initial = listOf())
             viewModel.getPractices()
             screenState.listPractices = practices
         }
 
         is ScreenState.Tasks -> {
-            val tasks: List<String> by viewModel.tasks.observeAsState(initial = listOf())
-            viewModel.getTasks(practice = screenState.practice)
+            val tasks: List<TaskDomain> by viewModel.tasks.observeAsState(initial = listOf())
+            viewModel.getTasks(screenState.practiceId)
             screenState.listTasks = tasks
+            screenState.navBar.iconRightOnClick = {menuOpen = true}
         }
 
         is ScreenState.Students -> {
-            val students: List<StudentDomain> by viewModel.students.observeAsState(
+            val checkedStudentDomainList: List<CheckedStudentDomain> by viewModel.students.observeAsState(
                 initial = listOf()
             )
 
-            viewModel.getStudents(practice = screenState.practice, task = screenState.task)
-            screenState.listStudents = students
+            screenState.checkedStudentDomainList = checkedStudentDomainList
+
 
             screenState.saveCheckStudent =
-                { student: StudentDomain -> viewModel.insertStudents(listOf(student)) }
+                { studentControlDomain: StudentControlDomain -> viewModel.insertStudentsControlDomain(listOf(studentControlDomain
+                )) }
 
             screenState.deleteStudent =
-                { student: StudentDomain ->
-                    viewModel.deleteStudents(listOf(student))
-                    viewModel.getStudents(practice = screenState.practice, task = screenState.task)
+                { studentId: String ->
+                    viewModel.deleteStudent(studentId)
+                    viewModel.getStudents(practiceId = screenState.practiceId, taskId = screenState.taskId)
                 }
-
+            viewModel.getStudents(practiceId = screenState.practiceId, taskId = screenState.taskId)
         }
-        is ScreenState.Edit -> {}
+        else -> {}
+
     }
 
 
@@ -71,7 +78,7 @@ fun ScreenStudentControl(
                 .fillMaxSize()
                 .padding(0.dp)
         ) {
-            Column() {
+            Column {
                 ScreenStudentControlList(
                     screenStatus = screenState
                 )
@@ -97,7 +104,7 @@ fun ScreenStudentControl(
         }
     }
     if (menuOpen) {
-        MenuScreen()
+        MenuScreen { menuOpen = false }
     }
 }
 

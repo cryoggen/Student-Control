@@ -1,11 +1,13 @@
 package com.cryoggen.studentcontrol
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.cryoggen.domain.models.StudentControlDomain
 import com.cryoggen.studentcontrol.presentation.ui.list.ScreenState
 
 
@@ -19,8 +21,8 @@ fun ScreenStudentControlList(
             LazyColumn(modifier = Modifier.padding(vertical = 0.dp)) {
                 this.items(items = screenStatus.listPractices) { practice ->
                     ScreenStudentControlItem(
-                        item = practice,
-                        onClick = { screenStatus.itemListOnClickItem(practice) },
+                        item = practice.name,
+                        onClick = { screenStatus.itemListOnClickItem(practice.id, practice.name) },
                         screenStatus = screenStatus,
                     )
                 }
@@ -32,8 +34,15 @@ fun ScreenStudentControlList(
             LazyColumn(modifier = Modifier.padding(vertical = 0.dp)) {
                 this.items(items = screenStatus.listTasks) { task ->
                     ScreenStudentControlItem(
-                        item = task,
-                        onClick = { screenStatus.itemListOnClickItem(screenStatus.practice, task) },
+                        item = task.name,
+                        onClick = {
+                            screenStatus.itemListOnClickItem(
+                                screenStatus.practiceId,
+                                screenStatus.practiceName,
+                                task.id,
+                                task.name
+                            )
+                        },
                         screenStatus = screenStatus,
                     )
                 }
@@ -41,34 +50,39 @@ fun ScreenStudentControlList(
         }
         is ScreenState.Students -> {
             LazyColumn(modifier = Modifier.padding(vertical = 0.dp)) {
-                this.items(items = screenStatus.listStudents) { student ->
+                this.items(items = screenStatus.checkedStudentDomainList) { checkedStudent ->
 
-                    var chekStudent by remember { mutableStateOf(student.check) }
+                    var chekStudent by remember { mutableStateOf(checkedStudent.check) }
+
 
 
                     val saveCheckStudent = {
-                        screenStatus.saveCheckStudent(student)
                         chekStudent = !chekStudent
+                        checkedStudent.check = chekStudent
+                        screenStatus.saveCheckStudent(
+                            StudentControlDomain(
+                                id = checkedStudent.id,
+                                practiceId = checkedStudent.practiceId,
+                                taskId = checkedStudent.taskId,
+                                nameId = checkedStudent.nameId,
+                                check = checkedStudent.check
+                            )
+                        )
+
                     }
 
-                    val deleteStudent = { screenStatus.deleteStudent(student) }
-
-
-                    student.check = chekStudent
-                    screenStatus.saveCheckStudent(student)
 
                     ScreenStudentControlItem(
                         saveCheckStudent = saveCheckStudent,
-                        deleteStudent = deleteStudent,
-                        item = student.name,
+                        deleteStudent = { screenStatus.deleteStudent(checkedStudent.nameId) },
+                        item = checkedStudent.name,
                         checked = chekStudent,
                         screenStatus = screenStatus
                     )
                 }
             }
         }
-        is ScreenState.Edit -> {}
+        else -> {}
     }
-
 
 }

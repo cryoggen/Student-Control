@@ -1,43 +1,48 @@
 package com.cryoggen.studentcontrol.presentation.ui.list
 
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.House
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.cryoggen.domain.models.StudentDomain
+import com.cryoggen.domain.models.CheckedStudentDomain
+import com.cryoggen.domain.models.PracticeDomain
+import com.cryoggen.domain.models.StudentControlDomain
+import com.cryoggen.domain.models.TaskDomain
 
 sealed class ScreenState {
 
     data class Practices(
-        var listPractices: List<String> = listOf(),
+        var listPractices: List<PracticeDomain> = listOf(),
         val navBar: NavBar,
-        var itemListOnClickItem: (String) -> Unit,
+        var itemListOnClickItem: (String, String) -> Unit,
         var floatingButtonOnClick: () -> Unit
     ) : ScreenState()
 
     data class Tasks(
-        val practice: String,
-        var listTasks: List<String> = listOf(),
-        var listPractices: List<String> = listOf(),
+        val practiceId: String,
+        val practiceName: String,
+        var listTasks: List<TaskDomain> = listOf(),
         val navBar: NavBar,
-        var itemListOnClickItem: (String, String) -> Unit,
+        var itemListOnClickItem: (String, String, String, String) -> Unit,
     ) : ScreenState()
 
     data class Students(
-        var listPractices: List<String> = listOf(),
         val navBar: NavBar,
-        val practice: String,
-        val task: String,
-        var listStudents: List<StudentDomain> = listOf(),
-        var saveCheckStudent: (StudentDomain) -> Unit = {},
-        var deleteStudent: (StudentDomain) -> Unit = {}
+        val practiceId: String,
+        val practiceName: String,
+        val taskId: String,
+        val taskName: String,
+        var checkedStudentDomainList: List<CheckedStudentDomain> = listOf(),
+        var saveCheckStudent: (StudentControlDomain) -> Unit = {},
+        var deleteStudent: (String) -> Unit = {}
     ) : ScreenState()
 
-    data class Edit(
+    data class NewPractice(
+        val navBar: NavBar,
+        var insertStudents: () -> Unit = {}
+    ): ScreenState()
+
+    data class EditPractice(
+        val practiceId: String,
         val navBar: NavBar,
         var insertStudent: () -> Unit = {}
     ): ScreenState()

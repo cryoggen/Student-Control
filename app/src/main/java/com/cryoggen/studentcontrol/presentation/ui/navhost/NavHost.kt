@@ -31,8 +31,8 @@ fun NavHost(modifier: Modifier = Modifier) {
     ) {
         composable("list_practices") {
 
-            val itemListOnClickItem = { practice: String ->
-                navController.navigate("list_tasks/$practice")
+            val itemListOnClickItem = { practiceId: String, practiceName: String ->
+                navController.navigate("list_tasks/$practiceId/$practiceName")
             }
 
             val floatingButtonOnClick = { navController.navigate("new_item_screen") }
@@ -58,58 +58,75 @@ fun NavHost(modifier: Modifier = Modifier) {
         }
 
         composable(
-            route = "list_tasks/{practice}",
-            arguments = listOf(navArgument("practice") { type = NavType.StringType })
+            route = "list_tasks/{practiceId}/{practiceName}",
+            arguments = listOf(
+                navArgument("practiceId") { type = NavType.StringType },
+                navArgument("practiceName") { type = NavType.StringType })
         ) { entry ->
 
-            val practice = entry.arguments?.getString("practice")
-            val itemListOnClickItem = { practice: String, task: String ->
-                navController.navigate("list_students/$practice/$task")
-            }
+            val practiceIdArgument = entry.arguments?.getString("practiceId")
+            val practiceNameArgument = entry.arguments?.getString("practiceName")
+
+            val itemListOnClickItem =
+                { practiceId: String, practiceName: String, taskId: String, taskName: String ->
+                    navController.navigate("list_students/$practiceId/$practiceName/$taskId/$taskName")
+                }
+
             val navBarIconLeftOnClick = { navController.navigate("list_practices") }
 
             val navBar = NavBar(
                 iconLeft = Icons.Filled.ArrowBack,
                 iconRight = Icons.Filled.MoreVert,
                 iconLeftOnClick = navBarIconLeftOnClick,
-                titleText = practice!!
+                titleText = practiceNameArgument!!
             )
 
             val screenState =
                 ScreenState.Tasks(
-                    practice = practice!!,
+                    practiceId = practiceIdArgument!!,
+                    practiceName = practiceNameArgument,
                     itemListOnClickItem = itemListOnClickItem,
                     navBar = navBar
                 )
 
             ScreenStudentControl(
                 screenState = screenState,
-                viewModel = hiltViewModel<ScreenStudentControlViewModel>(),
+                viewModel = screenStudentControlViewModel,
             )
         }
 
         composable(
-            "list_students/{practice}/{task}",
+            "list_students/{practiceId}/{practiceName}/{taskId}/{taskName}",
             arguments = listOf(
-                navArgument("task") { type = NavType.StringType },
-                navArgument("practice") { type = NavType.StringType })
+                navArgument("practiceId") { type = NavType.StringType },
+                navArgument("practiceName") { type = NavType.StringType },
+                navArgument("taskId") { type = NavType.StringType },
+                navArgument("taskName") { type = NavType.StringType },
+            )
         ) { entry ->
 
-            val practice = entry.arguments?.getString("practice")
-            val task = entry.arguments?.getString("task")
-            val navBarIconLeftOnClick = { navController.navigate("list_tasks/$practice") }
+            val practiceIdArgument = entry.arguments?.getString("practiceId")
+            val practiceNameArgument = entry.arguments?.getString("practiceName")
+            val taskIdArgument = entry.arguments?.getString("taskId")
+            val taskNameArgument = entry.arguments?.getString("taskName")
+
+
+            val navBarIconLeftOnClick =
+                { navController.navigate("list_tasks/$practiceIdArgument/$practiceNameArgument") }
 
             val navBar = NavBar(
                 iconLeft = Icons.Filled.ArrowBack,
                 iconRight = Icons.Filled.MoreVert,
                 iconLeftOnClick = navBarIconLeftOnClick,
-                titleText = task!!
+                titleText = taskNameArgument!!
             )
 
             val screenState =
                 ScreenState.Students(
-                    practice = practice!!,
-                    task = task!!,
+                    practiceId = practiceIdArgument!!,
+                    practiceName = practiceNameArgument!!,
+                    taskId = taskIdArgument!!,
+                    taskName = taskNameArgument!!,
                     navBar = navBar
                 )
 
@@ -120,10 +137,20 @@ fun NavHost(modifier: Modifier = Modifier) {
             )
         }
 
-        composable("new_item_screen") {
 
+
+        composable(
+            "new_item_screen?practice={practiceId}",
+            arguments = listOf(navArgument("practiceId") { defaultValue = "" })
+        ) { backStackEntry ->
+            val practiceId = backStackEntry.arguments?.getString("practiceId")
             val navBarIconLeftOnClick = { navController.navigate("list_practices") }
-            val navBarTitleText = stringResource(id = R.string.new_practice)
+
+            val navBarTitleText = if (practiceId == "") {
+                stringResource(id = R.string.new_practice)
+            } else {
+                stringResource(id = R.string.edit_practice)
+            }
 
             val navBar = NavBar(
                 iconLeft = Icons.Filled.ArrowBack,
@@ -133,9 +160,16 @@ fun NavHost(modifier: Modifier = Modifier) {
             )
 
             val screenState =
-                ScreenState.Edit(
-                    navBar = navBar
+//                if (practice == "") {
+                ScreenState.NewPractice(
+                    navBar = navBar,
                 )
+//                } else {
+//                    ScreenState.EditPractice(
+//                        navBar = navBar,
+//                        practice = practice!!
+//                    )
+//                }
 
             EditPracticeScreen(
                 screenState = screenState,
@@ -143,9 +177,7 @@ fun NavHost(modifier: Modifier = Modifier) {
             )
         }
 
-//        composable("menu_list_task") {
-//            MenuScreen()
-//        }
+
     }
 }
 

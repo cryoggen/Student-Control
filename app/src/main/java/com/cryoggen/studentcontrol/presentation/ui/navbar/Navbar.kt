@@ -26,7 +26,10 @@ fun Navbar(
         is ScreenState.Students -> {
             screenState.navBar
         }
-        is ScreenState.Edit -> {
+        is ScreenState.NewPractice -> {
+            screenState.navBar
+        }
+        is ScreenState.EditPractice -> {
             screenState.navBar
         }
     }

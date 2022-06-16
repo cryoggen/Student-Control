@@ -7,7 +7,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -28,7 +27,7 @@ fun IconRightNavbar(
     ) {
 
         IconButton(onClick = { icoRightOnClick() }) {
-            if (screenState is ScreenState.Edit) {
+            if (screenState is ScreenState.NewPractice) {
                 Icon(
                     iconRight,
                     tint = MaterialTheme.colors.secondary,
