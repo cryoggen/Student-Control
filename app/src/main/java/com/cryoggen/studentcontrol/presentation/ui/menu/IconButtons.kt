@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.cryoggen.studentcontrol.R
 
 @Composable
-fun IconButtons() {
+fun IconButtons(openEditScreen: () -> Unit) {
     Row(
         modifier = Modifier
             .padding(0.dp)
@@ -37,7 +37,7 @@ fun IconButtons() {
                 .width(1.dp)
                 .padding(vertical = 12.dp)
         )
-        IconButton(onClick = {}) {
+        IconButton(onClick = openEditScreen) {
             Icon(
                 Icons.Filled.Edit,
                 tint = MaterialTheme.colors.onPrimary,

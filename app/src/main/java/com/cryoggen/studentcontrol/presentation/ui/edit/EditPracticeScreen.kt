@@ -1,40 +1,107 @@
 package com.cryoggen.studentcontrol.presentation.ui.edit
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.cryoggen.domain.models.PracticeDomain
-import com.cryoggen.domain.models.StudentControlDomain
-import com.cryoggen.domain.models.StudentDomain
-import com.cryoggen.domain.models.TaskDomain
+import com.cryoggen.domain.models.*
 import com.cryoggen.studentcontrol.R
 import com.cryoggen.studentcontrol.presentation.ui.list.ScreenState
 import com.cryoggen.studentcontrol.presentation.ui.navbar.Navbar
+import java.util.*
 
 @Composable
 fun EditPracticeScreen(
     viewModel: EditPracticeScreenViewModel,
-    screenState: ScreenState.NewPractice
+    screenState: ScreenState
 ) {
-    var practice by remember { mutableStateOf(PracticeDomain(name = "")) }
-    val tasks = remember { mutableStateListOf(TaskDomain(name = "")) }
-    val students = remember { mutableStateListOf(StudentDomain(id = "", name = "")) }
-
-
+    var practiceId = UUID.randomUUID().toString()
+    var practiceName = ""
+    var onBackPressed = {}
     var savePracticeButtonClicked by remember {
         mutableStateOf(false)
     }
 
-    screenState.navBar.iconRightOnClick = {
-        savePracticeButtonClicked = true
+    when (screenState) {
+        is ScreenState.NewPractice -> {
+            onBackPressed = { screenState.navBar.iconLeftOnClick() }
+            screenState.navBar.iconRightOnClick = {
+                savePracticeButtonClicked = true
+            }
+        }
+        is ScreenState.EditPractice -> {
+            onBackPressed = { screenState.navBar.iconLeftOnClick() }
+            screenState.navBar.iconRightOnClick = {
+                savePracticeButtonClicked = true
+            }
+            practiceId = screenState.practiceId
+            practiceName = screenState.practiceName
+        }
+        else -> {}
+    }
+
+
+    var practice by remember {
+        mutableStateOf(
+            PracticeDomain(
+                id = practiceId,
+                name = practiceName
+            )
+        )
+    }
+
+
+    var tasks = remember { mutableStateListOf(TaskDomain(name = "")) }
+
+    var students = remember {
+        mutableStateListOf(
+            CheckedStudentDomain(
+                practiceId = "",
+                taskId = "",
+                nameId = "",
+                name = "",
+                check = false
+            )
+        )
+    }
+
+    if ((screenState is ScreenState.EditPractice) && (tasks.size == 1) && (tasks[0].name == "")) {
+
+        val tasksDomain: List<TaskDomain> by viewModel.tasks.observeAsState(
+            initial = listOf(
+
+            )
+        )
+        val studentsDomain: List<CheckedStudentDomain> by viewModel.students.observeAsState(
+            initial = listOf(
+
+            )
+        )
+
+        if (!tasksDomain.isEmpty()) {
+            tasks.clear()
+            for (task in tasksDomain) {
+                tasks.add(task)
+            }
+        }
+
+        if (!studentsDomain.isEmpty()) {
+            students.clear()
+            for (student in studentsDomain) {
+                students.add(student)
+            }
+        }
+
+        viewModel.getPracticeData(practiceId = practiceId)
     }
 
     when {
@@ -63,7 +130,7 @@ fun EditPracticeScreen(
                 tasks = tasks,
                 students = students
             )
-            screenState.navBar.iconLeftOnClick()
+            onBackPressed()
             savePracticeButtonClicked = false
         }
 
@@ -84,8 +151,10 @@ fun EditPracticeScreen(
 
             NewPracticeEditField(
                 value = practice.name,
-                onValueChange = { practice = practice.copy(name = it)
-                    savePracticeButtonClicked = false},
+                onValueChange = {
+                    practice = practice.copy(name = it)
+                    savePracticeButtonClicked = false
+                },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next,
@@ -101,8 +170,10 @@ fun EditPracticeScreen(
             for (i in 0 until tasks.size) {
                 NewPracticeEditField(
                     value = tasks[i].name,
-                    onValueChange = { tasks[i] = tasks[i].copy(name = it)
-                        savePracticeButtonClicked = false},
+                    onValueChange = {
+                        tasks[i] = tasks[i].copy(name = it)
+                        savePracticeButtonClicked = false
+                    },
                     onDeleteEditField = { tasks.removeAt(i) },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
@@ -124,8 +195,10 @@ fun EditPracticeScreen(
             for (i in 0 until students.size) {
                 NewPracticeEditField(
                     value = students[i].name,
-                    onValueChange = { students[i] = students[i].copy(name = it)
-                        savePracticeButtonClicked = false},
+                    onValueChange = {
+                        students[i] = students[i].copy(name = it)
+                        savePracticeButtonClicked = false
+                    },
                     onDeleteEditField = { students.removeAt(i) },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
@@ -137,17 +210,26 @@ fun EditPracticeScreen(
             }
             NewPracticeScreenButton(
                 text = stringResource(id = R.string.new_student_text_button),
-                addNewEditField = { students.add(StudentDomain(id = "", name = "")) }
+                addNewEditField = {
+                    students.add(
+                        CheckedStudentDomain(
+                            practiceId = "",
+                            taskId = "",
+                            nameId = "",
+                            name = "",
+                            check = false
+                        )
+                    )
+                }
             )
         }
 
     }
 
 
-
 }
 
-fun studentsVerification(students: SnapshotStateList<StudentDomain>): Boolean {
+fun studentsVerification(students: List<CheckedStudentDomain>): Boolean {
     for (student in students) {
         if (student.name != "") {
             return false
@@ -158,7 +240,7 @@ fun studentsVerification(students: SnapshotStateList<StudentDomain>): Boolean {
 }
 
 
-fun tasksVerification(tasks: SnapshotStateList<TaskDomain>): Boolean {
+fun tasksVerification(tasks: List<TaskDomain>): Boolean {
     for (task in tasks) {
         if (task.name != "") {
             return false

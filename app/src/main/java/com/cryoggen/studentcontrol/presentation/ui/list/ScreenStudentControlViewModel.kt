@@ -1,6 +1,5 @@
 package com.cryoggen.studentcontrol.presentation.ui.list
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ScreenStudentControlViewModel @Inject constructor(
     private val getPracticesUseCase: GetPracticesUseCase,
-    private val getStudentsUseCase: GetStudentsUseCase,
+    private val getCheckedStudentsUseCase: GetCheckedStudentsUseCase,
     private val getTasksUseCase: GetTasksUseCase,
     private val getStudentsControlListUseCase: GetStudentsControlListUseCase,
     private val insertStudentControlUseCase: InsertStudentControlUseCase,
@@ -40,7 +39,7 @@ class ScreenStudentControlViewModel @Inject constructor(
 
     fun getStudents(practiceId: String, taskId: String) {
         viewModelScope.launch {
-            _students.value = getStudentsUseCase.execute(practiceId = practiceId, taskId = taskId)
+            _students.value = getCheckedStudentsUseCase.execute(practiceId = practiceId, taskId = taskId)
         }
     }
 
@@ -71,7 +70,7 @@ class ScreenStudentControlViewModel @Inject constructor(
     fun deleteTaskStudent(practiceId: String, taskId: String, studentId: String, ) {
         viewModelScope.launch {
             deleteTaskStudentUseCase.execute(taskId = taskId, studentId = studentId)
-            getStudents(practiceId = practiceId,taskId = taskId )
+            _students.value = getCheckedStudentsUseCase.execute(practiceId = practiceId, taskId = taskId)
         }
     }
 

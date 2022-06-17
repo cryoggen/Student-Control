@@ -51,8 +51,8 @@ class DomainModule {
     }
 
     @Provides
-    fun provideGetStudentsUseCase(studentControlRepository: StudentControlRepository): GetStudentsUseCase {
-        return GetStudentsUseCase(studentControlRepository)
+    fun provideGetCheckedStudentsUseCase(studentControlRepository: StudentControlRepository): GetCheckedStudentsUseCase {
+        return GetCheckedStudentsUseCase(studentControlRepository)
     }
 
     @Provides

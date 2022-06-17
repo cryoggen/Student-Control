@@ -11,10 +11,10 @@ data class StudentControlDomain(
 )
 
 data class CheckedStudentDomain(
-    val id:String,
+    val id:String = UUID.randomUUID().toString(),
     val practiceId: String,
     val taskId: String,
-    val nameId: String,
+    var nameId: String,
     val name: String,
     var check:Boolean
 )

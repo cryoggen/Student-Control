@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.cryoggen.studentcontrol.presentation.ui.theme.Shapes
 
 @Composable
-fun MenuScreen(menuClose: () -> Unit) {
+fun MenuScreen(menuClose: () -> Unit, openEditScreen: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -37,19 +37,10 @@ fun MenuScreen(menuClose: () -> Unit) {
 
             ) {
                 MenuTitleText()
-                IconButtons()
+                IconButtons(openEditScreen = openEditScreen)
             }
         }
     }
 }
 
-@Preview(showBackground = true, widthDp = 320, heightDp = 320)
-@Composable
-fun MenuScreenPreview() {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colors.background
-    ) {
-        MenuScreen { }
-    }
-}
+

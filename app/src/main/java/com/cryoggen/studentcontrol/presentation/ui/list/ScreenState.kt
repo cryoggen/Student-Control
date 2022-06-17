@@ -23,6 +23,7 @@ sealed class ScreenState {
         var listTasks: List<TaskDomain> = listOf(),
         val navBar: NavBar,
         var itemListOnClickItem: (String, String, String, String) -> Unit,
+        var onEditPracticePressed: () -> Unit,
     ) : ScreenState()
 
     data class Students(
@@ -43,6 +44,7 @@ sealed class ScreenState {
 
     data class EditPractice(
         val practiceId: String,
+        val practiceName: String,
         val navBar: NavBar,
         var insertStudent: () -> Unit = {}
     ): ScreenState()

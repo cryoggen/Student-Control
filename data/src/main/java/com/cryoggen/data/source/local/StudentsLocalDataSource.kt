@@ -7,7 +7,7 @@ interface StudentsLocalDataSource {
     suspend fun getPractices(): List<PracticeDatabaseModel>
     suspend fun getStudentControlList(practiceId: String, taskId: String): List<StudentControlDatabaseModel>
     suspend fun getTasks(practiceId: String): List<TaskDatabaseModel>
-    suspend fun getStudents(practiceId: String, taskId: String): List<CheckedStudentDatabaseModel>
+    suspend fun getCheckedStudents(practiceId: String, taskId: String): List<CheckedStudentDatabaseModel>
     suspend fun insertStudents(students: List<StudentDatabaseModel>)
     suspend fun insertTasks(tasks: List<TaskDatabaseModel>)
     suspend fun insertPractice(practices: List<PracticeDatabaseModel>)

@@ -1,5 +1,6 @@
 package com.cryoggen.studentcontrol.presentation.ui.navhost
 
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
@@ -64,6 +65,7 @@ fun NavHost(modifier: Modifier = Modifier) {
                 navArgument("practiceName") { type = NavType.StringType })
         ) { entry ->
 
+
             val practiceIdArgument = entry.arguments?.getString("practiceId")
             val practiceNameArgument = entry.arguments?.getString("practiceName")
 
@@ -74,6 +76,8 @@ fun NavHost(modifier: Modifier = Modifier) {
 
             val navBarIconLeftOnClick = { navController.navigate("list_practices") }
 
+            val onEditPracticePressed =
+                { navController.navigate("new_item_screen?practiceId=$practiceIdArgument&practiceName=$practiceNameArgument") }
             val navBar = NavBar(
                 iconLeft = Icons.Filled.ArrowBack,
                 iconRight = Icons.Filled.MoreVert,
@@ -86,7 +90,8 @@ fun NavHost(modifier: Modifier = Modifier) {
                     practiceId = practiceIdArgument!!,
                     practiceName = practiceNameArgument,
                     itemListOnClickItem = itemListOnClickItem,
-                    navBar = navBar
+                    navBar = navBar,
+                    onEditPracticePressed = onEditPracticePressed
                 )
 
             ScreenStudentControl(
@@ -112,7 +117,7 @@ fun NavHost(modifier: Modifier = Modifier) {
 
 
             val navBarIconLeftOnClick =
-                { navController.navigate("list_tasks/$practiceIdArgument/$practiceNameArgument") }
+                { navController.navigate("list_tasks/practiceId=$practiceIdArgument/practiceName=$practiceNameArgument") }
 
             val navBar = NavBar(
                 iconLeft = Icons.Filled.ArrowBack,
@@ -126,7 +131,7 @@ fun NavHost(modifier: Modifier = Modifier) {
                     practiceId = practiceIdArgument!!,
                     practiceName = practiceNameArgument!!,
                     taskId = taskIdArgument!!,
-                    taskName = taskNameArgument!!,
+                    taskName = taskNameArgument,
                     navBar = navBar
                 )
 
@@ -140,10 +145,16 @@ fun NavHost(modifier: Modifier = Modifier) {
 
 
         composable(
-            "new_item_screen?practice={practiceId}",
-            arguments = listOf(navArgument("practiceId") { defaultValue = "" })
+            "new_item_screen?practiceId={practiceId}&practiceName={practiceName}",
+            arguments = listOf(
+                navArgument("practiceId") { defaultValue = ""
+                    type = NavType.StringType },
+                navArgument("practiceName") { defaultValue = ""
+                    type = NavType.StringType})
+
         ) { backStackEntry ->
             val practiceId = backStackEntry.arguments?.getString("practiceId")
+            val practiceName = backStackEntry.arguments?.getString("practiceName")
             val navBarIconLeftOnClick = { navController.navigate("list_practices") }
 
             val navBarTitleText = if (practiceId == "") {
@@ -160,16 +171,18 @@ fun NavHost(modifier: Modifier = Modifier) {
             )
 
             val screenState =
-//                if (practice == "") {
-                ScreenState.NewPractice(
-                    navBar = navBar,
-                )
-//                } else {
-//                    ScreenState.EditPractice(
-//                        navBar = navBar,
-//                        practice = practice!!
-//                    )
-//                }
+                if (practiceId == "") {
+                    ScreenState.NewPractice(
+                        navBar = navBar,
+                    )
+                } else {
+
+                    ScreenState.EditPractice(
+                        navBar = navBar,
+                        practiceId = practiceId!!,
+                        practiceName = practiceName!!
+                    )
+                }
 
             EditPracticeScreen(
                 screenState = screenState,

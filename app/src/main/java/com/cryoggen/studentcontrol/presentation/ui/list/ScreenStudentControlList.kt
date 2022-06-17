@@ -22,7 +22,9 @@ fun ScreenStudentControlList(
                 this.items(items = screenStatus.listPractices) { practice ->
                     ScreenStudentControlItem(
                         item = practice.name,
-                        onClick = { screenStatus.itemListOnClickItem(practice.id, practice.name) },
+                        onClick = {
+                            screenStatus.itemListOnClickItem(practice.id, practice.name)
+                        },
                         screenStatus = screenStatus,
                     )
                 }
@@ -51,29 +53,36 @@ fun ScreenStudentControlList(
         is ScreenState.Students -> {
             LazyColumn(modifier = Modifier.padding(vertical = 0.dp)) {
                 this.items(items = screenStatus.checkedStudentDomainList) { checkedStudent ->
-                    Log.d("11111",checkedStudent.toString() )
+
                     var chekStudent by remember { mutableStateOf(checkedStudent.check) }
 
+                    checkedStudent.check = chekStudent
+
+                    screenStatus.saveCheckStudent(
+                        StudentControlDomain(
+                            id = checkedStudent.id,
+                            practiceId = checkedStudent.practiceId,
+                            taskId = checkedStudent.taskId,
+                            nameId = checkedStudent.nameId,
+                            check = checkedStudent.check
+                        )
+                    )
 
                     val saveCheckStudent = {
                         chekStudent = !chekStudent
-                        checkedStudent.check = chekStudent
-                        screenStatus.saveCheckStudent(
-                            StudentControlDomain(
-                                id = checkedStudent.id,
-                                practiceId = checkedStudent.practiceId,
-                                taskId = checkedStudent.taskId,
-                                nameId = checkedStudent.nameId,
-                                check = checkedStudent.check
-                            )
-                        )
+
 
                     }
 
 
                     ScreenStudentControlItem(
                         saveCheckStudent = saveCheckStudent,
-                        deleteStudent = { screenStatus.deleteTaskStudent(checkedStudent.taskId,checkedStudent.nameId) },
+                        deleteStudent = {
+                            screenStatus.deleteTaskStudent(
+                                checkedStudent.taskId,
+                                checkedStudent.nameId
+                            )
+                        },
                         item = checkedStudent.name,
                         checked = chekStudent,
                         screenStatus = screenStatus

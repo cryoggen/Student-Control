@@ -11,11 +11,12 @@ class StudentsLocalDataSourceImpl(private val studentDatabase: StudentDatabase) 
     }
 
     override suspend fun getTasks(practiceId:String): List<TaskDatabaseModel> {
+
         return studentDatabase.studentsDao.getTasks(practiceId = practiceId)
     }
 
-    override suspend fun getStudents(practiceId:String, taskId:String): List<CheckedStudentDatabaseModel> {
-        return studentDatabase.studentsDao.getStudents(practiceId = practiceId, taskId = taskId)
+    override suspend fun getCheckedStudents(practiceId:String, taskId:String): List<CheckedStudentDatabaseModel> {
+        return studentDatabase.studentsDao.getCheckedStudents(practiceId = practiceId, taskId = taskId)
     }
 
     override suspend fun insertStudents(students: List<StudentDatabaseModel>) {

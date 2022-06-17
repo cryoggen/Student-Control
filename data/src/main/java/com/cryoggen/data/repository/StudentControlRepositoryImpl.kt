@@ -17,8 +17,8 @@ import com.cryoggen.domain.repository.StudentControlRepository
          return studentsLocalDataSource.getTasks(practiceId).asDomainModel()
      }
 
-     override suspend fun getStudents(practiceId: String, taskId: String): List<CheckedStudentDomain> {
-         return studentsLocalDataSource.getStudents(practiceId = practiceId, taskId = taskId).asDomainModel()
+     override suspend fun getCheckedStudents(practiceId: String, taskId: String): List<CheckedStudentDomain> {
+         return studentsLocalDataSource.getCheckedStudents(practiceId = practiceId, taskId = taskId).asDomainModel()
      }
 
      override suspend fun insertStudents(students: List<StudentDomain>) {

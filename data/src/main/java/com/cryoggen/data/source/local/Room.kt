@@ -25,7 +25,7 @@ interface StudentsDao {
     @Query("select * from PracticeDatabaseModel")
     suspend fun getPractices(): List<PracticeDatabaseModel>
 
-    @Query("select distinct TaskDatabaseModel.id ,TaskDatabaseModel.name " +
+    @Query("select distinct TaskDatabaseModel.id , TaskDatabaseModel.name " +
             "FROM StudentControlDatabaseModel, TaskDatabaseModel" +
             " WHERE StudentControlDatabaseModel.taskId == TaskDatabaseModel.id and StudentControlDataBaseModel.practiceId = :practiceId")
     suspend fun getTasks(practiceId: String): List<TaskDatabaseModel>
@@ -35,7 +35,7 @@ interface StudentsDao {
             "FROM StudentControlDatabaseModel, StudentDatabaseModel" +
             " WHERE StudentControlDatabaseModel.nameId == StudentDatabaseModel.id"+
             " and StudentControlDataBaseModel.practiceId = :practiceId and StudentControlDataBaseModel.taskId = :taskId" )
-    suspend fun getStudents(practiceId: String, taskId: String): List<CheckedStudentDatabaseModel>
+    suspend fun getCheckedStudents(practiceId: String, taskId: String): List<CheckedStudentDatabaseModel>
 
     @Query("select * FROM StudentControlDatabaseModel  where practiceId = :practiceId and taskId = :taskId")
     suspend fun getStudentControlList(practiceId: String, taskId: String): List<StudentControlDatabaseModel>

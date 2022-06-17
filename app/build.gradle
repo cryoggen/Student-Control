@@ -93,6 +93,12 @@ dependencies {
 
 
 }
+android {
+    kotlinOptions {
+        jvmTarget = '1.8'
+        noStdlib = true
+    }
+}
 
 
 

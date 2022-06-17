@@ -6,7 +6,7 @@ interface StudentControlRepository {
     suspend fun getPractices(): List<PracticeDomain>
     suspend  fun getStudentControlList(practiceId: String, taskId: String): List<StudentControlDomain>
     suspend fun getTasks(practiceId: String): List<TaskDomain>
-    suspend fun getStudents(practiceId: String, taskId: String): List<CheckedStudentDomain>
+    suspend fun getCheckedStudents(practiceId: String, taskId: String): List<CheckedStudentDomain>
     suspend fun insertStudents(students: List<StudentDomain>)
     suspend fun insertTasks(tasks: List<TaskDomain>)
     suspend fun insertPractice(practices: List<PracticeDomain>)

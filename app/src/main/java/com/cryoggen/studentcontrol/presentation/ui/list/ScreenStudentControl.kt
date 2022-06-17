@@ -35,10 +35,13 @@ fun ScreenStudentControl(
             val practices: List<PracticeDomain> by viewModel.practices.observeAsState(initial = listOf())
             viewModel.getPractices()
             screenState.listPractices = practices
+
         }
 
         is ScreenState.Tasks -> {
+
             val tasks: List<TaskDomain> by viewModel.tasks.observeAsState(initial = listOf())
+
             viewModel.getTasks(screenState.practiceId)
             screenState.listTasks = tasks
             screenState.navBar.iconRightOnClick = { menuOpen = true }
@@ -52,7 +55,6 @@ fun ScreenStudentControl(
 
             screenState.checkedStudentDomainList = checkedStudentDomainList
 
-
             screenState.saveCheckStudent =
                 { studentControlDomain: StudentControlDomain ->
                     viewModel.insertStudentsControlDomain(
@@ -64,11 +66,20 @@ fun ScreenStudentControl(
 
             screenState.deleteTaskStudent =
                 { taskId: String, studentId: String ->
-                  viewModel.deleteTaskStudent(practiceId = screenState.practiceId, taskId = taskId, studentId = studentId)
+                    viewModel.deleteTaskStudent(
+                        practiceId = screenState.practiceId,
+                        taskId = taskId,
+                        studentId = studentId
+                    )
 
                 }
 
-            viewModel.getStudents(practiceId = screenState.practiceId, taskId = screenState.taskId)
+            if (checkedStudentDomainList.isEmpty()) {
+                viewModel.getStudents(
+                    practiceId = screenState.practiceId,
+                    taskId = screenState.taskId
+                )
+            }
         }
         else -> {}
 
@@ -110,7 +121,17 @@ fun ScreenStudentControl(
         }
     }
     if (menuOpen) {
-        MenuScreen { menuOpen = false }
+        when (screenState) {
+            is ScreenState.Practices -> {
+
+            }
+            is ScreenState.Tasks -> {
+                MenuScreen(openEditScreen = screenState.onEditPracticePressed, menuClose = { menuOpen = false })
+            }
+            is ScreenState.Students -> {
+            }
+            else -> {}
+        }
     }
 }
 
