@@ -15,34 +15,42 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.cryoggen.studentcontrol.R
+import com.cryoggen.studentcontrol.presentation.ui.list.ScreenState
 
 @Composable
-fun IconButtons(openEditScreen: () -> Unit) {
+fun IconButtons( screenState: ScreenState) {
     Row(
         modifier = Modifier
             .padding(0.dp)
             .height(IntrinsicSize.Min)
     ) {
-        IconButton(onClick = {}) {
-            Icon(
-                Icons.Filled.Delete,
-                tint = MaterialTheme.colors.onPrimary,
-                contentDescription = stringResource(id = R.string.nav_bar_menu_description)
-            )
+        when(screenState){
+            is ScreenState.Tasks -> {
+                IconButton(onClick = {screenState.onDeletePracticePressed()}) {
+                    Icon(
+                        Icons.Filled.Delete,
+                        tint = MaterialTheme.colors.onPrimary,
+                        contentDescription = stringResource(id = R.string.nav_bar_menu_description)
+                    )
+                }
+                Divider(
+                    color = MaterialTheme.colors.primary,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(1.dp)
+                        .padding(vertical = 12.dp)
+                )
+                IconButton(onClick = screenState.onEditPracticePressed) {
+                    Icon(
+                        Icons.Filled.Edit,
+                        tint = MaterialTheme.colors.onPrimary,
+                        contentDescription = stringResource(id = R.string.nav_bar_menu_description)
+                    )
+                }
+            }
+            is ScreenState.Students -> {}
+            else -> {}
         }
-        Divider(
-          color = MaterialTheme.colors.primary,
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(1.dp)
-                .padding(vertical = 12.dp)
-        )
-        IconButton(onClick = openEditScreen) {
-            Icon(
-                Icons.Filled.Edit,
-                tint = MaterialTheme.colors.onPrimary,
-                contentDescription = stringResource(id = R.string.nav_bar_menu_description)
-            )
-        }
+
     }
 }

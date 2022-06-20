@@ -9,8 +9,13 @@ import com.cryoggen.domain.repository.StudentControlRepository
  class StudentControlRepositoryImpl(
     private val studentsLocalDataSource: StudentsLocalDataSource
 ) : StudentControlRepository {
+
      override suspend fun getPractices(): List<PracticeDomain> {
         return studentsLocalDataSource.getPractices().asDomainModel()
+     }
+
+     override suspend fun getStudents(practiceId: String): List<StudentDomain> {
+         return studentsLocalDataSource.getStudents(practiceId).asDomainModel()
      }
 
      override suspend fun getTasks(practiceId: String): List<TaskDomain> {

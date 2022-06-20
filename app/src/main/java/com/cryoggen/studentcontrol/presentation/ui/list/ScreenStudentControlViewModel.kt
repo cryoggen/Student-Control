@@ -1,5 +1,6 @@
 package com.cryoggen.studentcontrol.presentation.ui.list
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +19,9 @@ class ScreenStudentControlViewModel @Inject constructor(
     private val getStudentsControlListUseCase: GetStudentsControlListUseCase,
     private val insertStudentControlUseCase: InsertStudentControlUseCase,
     private val deleteStudentUseCase: DeleteStudentUseCase,
+    private val deletePracticeUseCase: DeletePracticeUseCase,
     private val deleteTaskStudentUseCase: DeleteTaskStudentUseCase
+
 ) : ViewModel() {
 
     private val _students = MutableLiveData<List<CheckedStudentDomain>>()
@@ -46,6 +49,7 @@ class ScreenStudentControlViewModel @Inject constructor(
     fun getTasks(practiceId: String) {
         viewModelScope.launch {
             _tasks.value = getTasksUseCase.execute(practiceId = practiceId)
+
         }
     }
 
@@ -64,6 +68,12 @@ class ScreenStudentControlViewModel @Inject constructor(
     fun deleteStudent(studentId: String) {
         viewModelScope.launch {
             deleteStudentUseCase.execute(studentId)
+        }
+    }
+
+    fun deletePractice(practiceId: String) {
+        viewModelScope.launch {
+            deletePracticeUseCase.execute(practiceId)
         }
     }
 

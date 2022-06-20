@@ -24,6 +24,7 @@ sealed class ScreenState {
         val navBar: NavBar,
         var itemListOnClickItem: (String, String, String, String) -> Unit,
         var onEditPracticePressed: () -> Unit,
+        var onDeletePracticePressed: () -> Unit = {},
     ) : ScreenState()
 
     data class Students(
@@ -48,7 +49,6 @@ sealed class ScreenState {
         val navBar: NavBar,
         var insertStudent: () -> Unit = {}
     ): ScreenState()
-
 }
 
 data class NavBar(

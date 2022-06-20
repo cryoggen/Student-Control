@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cryoggen.domain.models.*
 import com.cryoggen.domain.usecase.*
+import com.cryoggen.studentcontrol.presentation.ui.list.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -19,7 +20,10 @@ class EditPracticeScreenViewModel @Inject constructor(
     private val insertPracticeUseCase: InsertPracticeUseCase,
     private val insertStudentControlUseCase: InsertStudentControlUseCase,
     private val getTasksUseCase: GetTasksUseCase,
-    private val getCheckedStudentsUseCase: GetCheckedStudentsUseCase,
+    private val getStudentsUseCase: GetStudentsUseCase,
+    private val deleteTaskUseCase: DeleteTaskUseCase,
+    private val deleteStudentUseCase: DeleteStudentUseCase,
+
 ) : ViewModel() {
 
     private val _tasks = MutableLiveData<List<TaskDomain>>()
@@ -27,66 +31,92 @@ class EditPracticeScreenViewModel @Inject constructor(
         get() = _tasks
 
 
-    private val _students = MutableLiveData<List<CheckedStudentDomain>>()
-    val students: LiveData<List<CheckedStudentDomain>>
+    private val _students = MutableLiveData<List<StudentDomain>>()
+    val students: LiveData<List<StudentDomain>>
         get() = _students
 
     fun insertStudentsControl(
         practice: PracticeDomain,
         tasks: List<TaskDomain>,
-        students: List<CheckedStudentDomain>
+        students: List<StudentDomain>
     ) {
-        val studentsInsert:MutableList<StudentDomain> = mutableListOf()
+        val studentsInsert: MutableList<StudentDomain> = mutableListOf()
         val studentsControlDomainList: MutableList<StudentControlDomain> = mutableListOf()
+
         for (student in students) {
-            if (student.nameId == "") {
-                student.nameId = UUID.randomUUID().toString()
+            if (student.name == "") continue
+            if (student.id == "") {
+                student.id = UUID.randomUUID().toString()
                 for (task in tasks) {
+                    if (task.id != "") {
+                        studentsControlDomainList.add(
+                            StudentControlDomain(
+                                practiceId = practice.id,
+                                taskId = task.id,
+                                nameId = student.id,
+                                check = false
+                            )
+                        )
+                    }
+                }
+            }
+            studentsInsert.add(StudentDomain(id = student.id, name = student.name))
+        }
+
+        for (task in tasks) {
+            if (task.name == "") continue
+            if (task.id == "") {
+                task.id = UUID.randomUUID().toString()
+                for (student in studentsInsert) {
                     studentsControlDomainList.add(
                         StudentControlDomain(
                             practiceId = practice.id,
                             taskId = task.id,
-                            nameId = student.nameId,
+                            nameId = student.id,
                             check = false
                         )
                     )
                 }
             }
-            studentsInsert.add(StudentDomain(id = student.nameId, name = student.name))
-        }
 
-        viewModelScope.launch {
-            insertPracticeUseCase.execute(listOf(practice))
-            insertTasksUseCase.execute(tasks)
-            insertStudentsUseCase.execute(studentsInsert)
-            insertStudentControlUseCase.execute(studentsControlDomainList)
+            viewModelScope.launch {
+                insertPracticeUseCase.execute(listOf(practice))
+                insertTasksUseCase.execute(tasks)
+                insertStudentsUseCase.execute(studentsInsert)
+                insertStudentControlUseCase.execute(studentsControlDomainList)
 
-        }
 
-    }
-
-    fun getTasks(practiceId: String) {
-        viewModelScope.launch {
-            _tasks.value = getTasksUseCase.execute(practiceId = practiceId)
-        }
-    }
-
-    fun getStudents(practiceId: String, taskId: String) {
-        viewModelScope.launch {
-            _students.value = getCheckedStudentsUseCase.execute(practiceId = practiceId, taskId = taskId)
-        }
-    }
-
-    fun getPracticeData(practiceId: String) {
-        viewModelScope.launch {
-            val tasks = getTasksUseCase.execute(practiceId = practiceId)
-            val students: MutableList<CheckedStudentDomain> = mutableListOf()
-            for (task in tasks) {
-                students.addAll(getCheckedStudentsUseCase.execute(practiceId = practiceId, taskId = task.id))
             }
-            _tasks.value = tasks
-            _students.value = students
+
+        }
+
+    }
+
+        fun getTasks(practiceId: String) {
+            viewModelScope.launch {
+                _tasks.value = getTasksUseCase.execute(practiceId = practiceId)
+
+
+            }
+        }
+
+
+        fun getStudents(practiceId: String) {
+            viewModelScope.launch {
+                _students.value = getStudentsUseCase.execute(practiceId)
+            }
+        }
+
+    fun deleteTask(taskId:String){
+        viewModelScope.launch {
+            deleteTaskUseCase.execute(taskId)
         }
     }
 
-}
+    fun deleteStudent(studentId:String){
+        viewModelScope.launch {
+            deleteStudentUseCase.execute(studentId)
+        }
+    }
+
+    }

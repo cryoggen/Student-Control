@@ -22,23 +22,30 @@ interface StudentsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertStudentControl(studentControlDatabaseModelList: List<StudentControlDatabaseModel>)
 
-    @Query("select * from PracticeDatabaseModel")
+    @Query("select * from PracticeDatabaseModel ORDER BY date DESC ")
     suspend fun getPractices(): List<PracticeDatabaseModel>
 
     @Query("select distinct TaskDatabaseModel.id , TaskDatabaseModel.name " +
-            "FROM StudentControlDatabaseModel, TaskDatabaseModel" +
-            " WHERE StudentControlDatabaseModel.taskId == TaskDatabaseModel.id and StudentControlDataBaseModel.practiceId = :practiceId")
+            "FROM StudentControlDatabaseModel, TaskDatabaseModel " +
+            " WHERE StudentControlDatabaseModel.taskId == TaskDatabaseModel.id and StudentControlDataBaseModel.practiceId = :practiceId ORDER BY TaskDatabaseModel.name"
+            )
     suspend fun getTasks(practiceId: String): List<TaskDatabaseModel>
+
+    @Query("select distinct StudentDatabaseModel.id , StudentDatabaseModel.name " +
+            "FROM StudentControlDatabaseModel, StudentDatabaseModel" +
+            " WHERE StudentControlDatabaseModel.nameId == StudentDatabaseModel.id and StudentControlDataBaseModel.practiceId = :practiceId ORDER BY StudentDatabaseModel.name")
+    suspend fun getStudents(practiceId:String): List<StudentDatabaseModel>
 
     @Query("select distinct StudentControlDatabaseModel.id, StudentControlDatabaseModel.practiceId,StudentControlDatabaseModel.taskId,"+
             " StudentControlDatabaseModel.nameId, StudentDatabaseModel.name, StudentControlDatabaseModel.`check` " +
             "FROM StudentControlDatabaseModel, StudentDatabaseModel" +
             " WHERE StudentControlDatabaseModel.nameId == StudentDatabaseModel.id"+
-            " and StudentControlDataBaseModel.practiceId = :practiceId and StudentControlDataBaseModel.taskId = :taskId" )
+            " and StudentControlDataBaseModel.practiceId = :practiceId and StudentControlDataBaseModel.taskId = :taskId ORDER BY StudentDatabaseModel.name" )
     suspend fun getCheckedStudents(practiceId: String, taskId: String): List<CheckedStudentDatabaseModel>
 
     @Query("select * FROM StudentControlDatabaseModel  where practiceId = :practiceId and taskId = :taskId")
     suspend fun getStudentControlList(practiceId: String, taskId: String): List<StudentControlDatabaseModel>
+
 
     @Query("delete from StudentControlDatabaseModel where id = :studentId")
     suspend fun deleteStudentControl(studentId: String)

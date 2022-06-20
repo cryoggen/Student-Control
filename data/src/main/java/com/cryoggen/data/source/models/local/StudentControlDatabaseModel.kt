@@ -16,33 +16,34 @@ data class StudentControlDatabaseModel constructor(
 )
 
 data class CheckedStudentDatabaseModel(
-    val id:String,
+    val id: String,
     val practiceId: String,
     val taskId: String,
     val nameId: String,
     val name: String,
-    val check:Boolean
+    val check: Boolean
 )
 
 
 @Entity
 data class StudentDatabaseModel(
     @PrimaryKey
-    val id:String,
+    val id: String,
     val name: String
 )
 
 @Entity
 data class PracticeDatabaseModel(
     @PrimaryKey
-    val id:String,
-    val name: String
+    val id: String,
+    val name: String,
+    val date: String
 )
 
 @Entity
 data class TaskDatabaseModel(
     @PrimaryKey
-    val id:String,
+    val id: String,
     val name: String
 )
 
@@ -72,7 +73,6 @@ fun List<StudentControlDomain>.asDatabaseModel(): List<StudentControlDatabaseMod
 }
 
 
-
 @JvmName("asDatabaseModelStudentNamesDomain")
 fun List<StudentDomain>.asDatabaseModel(): List<StudentDatabaseModel> {
     return map {
@@ -88,7 +88,8 @@ fun List<PracticeDomain>.asDatabaseModel(): List<PracticeDatabaseModel> {
     return map {
         PracticeDatabaseModel(
             id = it.id,
-            name = it.name
+            name = it.name,
+            date = it.date
         )
     }
 }
@@ -120,7 +121,8 @@ fun List<PracticeDatabaseModel>.asDomainModel(): List<PracticeDomain> {
     return map {
         PracticeDomain(
             id = it.id,
-            name = it.name
+            name = it.name,
+            date = it.date
         )
     }
 }

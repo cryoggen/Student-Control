@@ -18,6 +18,10 @@ class DomainModule {
         return GetPracticesUseCase(studentControlRepository)
     }
 
+    @Provides
+    fun provideGetStudentsUseCase(studentControlRepository: StudentControlRepository): GetStudentsUseCase {
+        return GetStudentsUseCase(studentControlRepository)
+    }
 
     @Provides
     fun provideGetTasksUseCase(studentControlRepository: StudentControlRepository): GetTasksUseCase {

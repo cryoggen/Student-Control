@@ -5,6 +5,7 @@ import com.cryoggen.data.source.models.local.*
 
 interface StudentsLocalDataSource {
     suspend fun getPractices(): List<PracticeDatabaseModel>
+    suspend fun getStudents(practiceId: String): List<StudentDatabaseModel>
     suspend fun getStudentControlList(practiceId: String, taskId: String): List<StudentControlDatabaseModel>
     suspend fun getTasks(practiceId: String): List<TaskDatabaseModel>
     suspend fun getCheckedStudents(practiceId: String, taskId: String): List<CheckedStudentDatabaseModel>

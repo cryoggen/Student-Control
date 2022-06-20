@@ -5,9 +5,14 @@ import com.cryoggen.data.source.models.local.*
 
 class StudentsLocalDataSourceImpl(private val studentDatabase: StudentDatabase) :
     StudentsLocalDataSource {
+
     override suspend fun getPractices(): List<PracticeDatabaseModel> {
         return studentDatabase.studentsDao.getPractices()
 
+    }
+
+    override suspend fun getStudents(practiceId: String): List<StudentDatabaseModel> {
+        return studentDatabase.studentsDao.getStudents(practiceId)
     }
 
     override suspend fun getTasks(practiceId:String): List<TaskDatabaseModel> {

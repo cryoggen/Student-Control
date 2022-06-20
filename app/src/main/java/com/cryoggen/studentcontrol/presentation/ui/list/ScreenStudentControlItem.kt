@@ -26,11 +26,12 @@ fun ScreenStudentControlItem(
     deleteStudent: () -> Unit = {},
 
     ) {
+    val clickableEnabled = screenStatus !is ScreenState.Students
     Card(
         backgroundColor = MaterialTheme.colors.primary,
         modifier = Modifier
             .padding(vertical = 4.dp, horizontal = 8.dp)
-            .clickable(onClick = onClick)
+            .clickable(onClick = onClick, enabled = clickableEnabled)
     ) {
 
 

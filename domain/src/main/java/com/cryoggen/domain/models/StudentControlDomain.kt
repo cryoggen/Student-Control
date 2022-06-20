@@ -21,16 +21,17 @@ data class CheckedStudentDomain(
 
 data class PracticeDomain(
     val id:String = UUID.randomUUID().toString(),
-    var name: String
+    var name: String,
+    val date:String = Date().toString()
 )
 
 data class TaskDomain(
-    val id:String = UUID.randomUUID().toString(),
+    var id:String = UUID.randomUUID().toString(),
     var name: String
 )
 
 data class StudentDomain(
-    var id:String,
+    var id:String = UUID.randomUUID().toString(),
     var name: String
 )
 

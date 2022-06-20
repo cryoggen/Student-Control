@@ -4,6 +4,7 @@ import com.cryoggen.domain.models.*
 
 interface StudentControlRepository {
     suspend fun getPractices(): List<PracticeDomain>
+    suspend fun getStudents(practiceId: String): List<StudentDomain>
     suspend  fun getStudentControlList(practiceId: String, taskId: String): List<StudentControlDomain>
     suspend fun getTasks(practiceId: String): List<TaskDomain>
     suspend fun getCheckedStudents(practiceId: String, taskId: String): List<CheckedStudentDomain>

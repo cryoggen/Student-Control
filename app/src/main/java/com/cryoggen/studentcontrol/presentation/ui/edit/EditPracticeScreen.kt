@@ -60,16 +60,13 @@ fun EditPracticeScreen(
     }
 
 
-    var tasks = remember { mutableStateListOf(TaskDomain(name = "")) }
+    val tasks = remember { mutableStateListOf(TaskDomain(id = "", name = "")) }
 
-    var students = remember {
+    val students = remember {
         mutableStateListOf(
-            CheckedStudentDomain(
-                practiceId = "",
-                taskId = "",
-                nameId = "",
+            StudentDomain(
+                id = "",
                 name = "",
-                check = false
             )
         )
     }
@@ -81,7 +78,7 @@ fun EditPracticeScreen(
 
             )
         )
-        val studentsDomain: List<CheckedStudentDomain> by viewModel.students.observeAsState(
+        val studentsDomain: List<StudentDomain> by viewModel.students.observeAsState(
             initial = listOf(
 
             )
@@ -101,7 +98,8 @@ fun EditPracticeScreen(
             }
         }
 
-        viewModel.getPracticeData(practiceId = practiceId)
+        viewModel.getStudents(practiceId = practiceId)
+        viewModel.getTasks(practiceId = practiceId)
     }
 
     when {
@@ -124,7 +122,9 @@ fun EditPracticeScreen(
             })
 
         }
+
         savePracticeButtonClicked -> {
+
             viewModel.insertStudentsControl(
                 practice = practice,
                 tasks = tasks,
@@ -174,7 +174,12 @@ fun EditPracticeScreen(
                         tasks[i] = tasks[i].copy(name = it)
                         savePracticeButtonClicked = false
                     },
-                    onDeleteEditField = { tasks.removeAt(i) },
+                    onDeleteEditField = {
+                        if (tasks[i].id != "") {
+                            viewModel.deleteTask(tasks[i].id)
+                        }
+                        tasks.removeAt(i)
+                    },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Next,
@@ -186,7 +191,7 @@ fun EditPracticeScreen(
 
             NewPracticeScreenButton(
                 text = stringResource(id = R.string.new_task_name_text_button),
-                addNewEditField = { tasks.add(TaskDomain(name = "")) }
+                addNewEditField = { tasks.add(TaskDomain(id = "", name = "")) }
             )
 
             Spacer(Modifier.height(32.dp))
@@ -199,7 +204,11 @@ fun EditPracticeScreen(
                         students[i] = students[i].copy(name = it)
                         savePracticeButtonClicked = false
                     },
-                    onDeleteEditField = { students.removeAt(i) },
+                    onDeleteEditField = {
+                        if (students[i].id != "") {
+                            viewModel.deleteStudent(students[i].id)
+                        }
+                        students.removeAt(i) },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Next,
@@ -212,12 +221,9 @@ fun EditPracticeScreen(
                 text = stringResource(id = R.string.new_student_text_button),
                 addNewEditField = {
                     students.add(
-                        CheckedStudentDomain(
-                            practiceId = "",
-                            taskId = "",
-                            nameId = "",
+                        StudentDomain(
+                            id = "",
                             name = "",
-                            check = false
                         )
                     )
                 }
@@ -229,7 +235,7 @@ fun EditPracticeScreen(
 
 }
 
-fun studentsVerification(students: List<CheckedStudentDomain>): Boolean {
+fun studentsVerification(students: List<StudentDomain>): Boolean {
     for (student in students) {
         if (student.name != "") {
             return false

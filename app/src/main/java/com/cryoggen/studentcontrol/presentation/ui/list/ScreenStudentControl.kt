@@ -126,7 +126,11 @@ fun ScreenStudentControl(
 
             }
             is ScreenState.Tasks -> {
-                MenuScreen(openEditScreen = screenState.onEditPracticePressed, menuClose = { menuOpen = false })
+                screenState.onDeletePracticePressed = {
+                    viewModel.deletePractice(screenState.practiceId)
+                    screenState.navBar.iconLeftOnClick()
+                }
+                MenuScreen(screenState = screenState, menuClose = { menuOpen = false })
             }
             is ScreenState.Students -> {
             }

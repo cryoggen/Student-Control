@@ -65,10 +65,11 @@ fun NavHost(modifier: Modifier = Modifier) {
                 navArgument("practiceName") { type = NavType.StringType })
         ) { entry ->
 
-
             val practiceIdArgument = entry.arguments?.getString("practiceId")
             val practiceNameArgument = entry.arguments?.getString("practiceName")
 
+            Log.d("11111", practiceNameArgument!!)
+            Log.d("11111", practiceIdArgument!!)
             val itemListOnClickItem =
                 { practiceId: String, practiceName: String, taskId: String, taskName: String ->
                     navController.navigate("list_students/$practiceId/$practiceName/$taskId/$taskName")
@@ -117,7 +118,7 @@ fun NavHost(modifier: Modifier = Modifier) {
 
 
             val navBarIconLeftOnClick =
-                { navController.navigate("list_tasks/practiceId=$practiceIdArgument/practiceName=$practiceNameArgument") }
+                { navController.navigate("list_tasks/$practiceIdArgument/$practiceNameArgument") }
 
             val navBar = NavBar(
                 iconLeft = Icons.Filled.ArrowBack,
