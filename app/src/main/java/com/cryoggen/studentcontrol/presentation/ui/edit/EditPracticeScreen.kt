@@ -102,39 +102,8 @@ fun EditPracticeScreen(
         viewModel.getTasks(practiceId = practiceId)
     }
 
-    when {
 
-        practiceVerification(practice) && savePracticeButtonClicked -> {
-            SnackBar(stringResource(id = R.string.practice_not_introduced), stopSnackBar = {
-                savePracticeButtonClicked = false
-            })
-        }
-
-        tasksVerification(tasks) && savePracticeButtonClicked -> {
-            SnackBar(stringResource(id = R.string.tasks_not_introduced), stopSnackBar = {
-                savePracticeButtonClicked = false
-            })
-
-        }
-        studentsVerification(students) && savePracticeButtonClicked -> {
-            SnackBar(stringResource(id = R.string.students_not_introduced), stopSnackBar = {
-                savePracticeButtonClicked = false
-            })
-
-        }
-
-        savePracticeButtonClicked -> {
-
-            viewModel.insertStudentsControl(
-                practice = practice,
-                tasks = tasks,
-                students = students
-            )
-            onBackPressed()
-            savePracticeButtonClicked = false
-        }
-
-    }
+Box() {
 
     Column() {
         Navbar(
@@ -231,6 +200,40 @@ fun EditPracticeScreen(
         }
 
     }
+    when {
+
+        practiceVerification(practice) && savePracticeButtonClicked -> {
+            SnackBar(stringResource(id = R.string.practice_not_introduced), stopSnackBar = {
+                savePracticeButtonClicked = false
+            })
+        }
+
+        tasksVerification(tasks) && savePracticeButtonClicked -> {
+            SnackBar(stringResource(id = R.string.tasks_not_introduced), stopSnackBar = {
+                savePracticeButtonClicked = false
+            })
+
+        }
+        studentsVerification(students) && savePracticeButtonClicked -> {
+            SnackBar(stringResource(id = R.string.students_not_introduced), stopSnackBar = {
+                savePracticeButtonClicked = false
+            })
+
+        }
+
+        savePracticeButtonClicked -> {
+
+            viewModel.insertStudentsControl(
+                practice = practice,
+                tasks = tasks,
+                students = students
+            )
+            onBackPressed()
+            savePracticeButtonClicked = false
+        }
+
+    }
+}
 
 
 }

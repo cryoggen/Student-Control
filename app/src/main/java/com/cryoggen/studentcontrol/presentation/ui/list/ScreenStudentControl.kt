@@ -1,5 +1,7 @@
 package com.cryoggen.studentcontrol.presentation.ui.list
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -85,11 +87,12 @@ fun ScreenStudentControl(
 
     }
 
-
+Box() {
     Column(modifier = Modifier.padding(0.dp)) {
         Navbar(
             screenState = screenState
         )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -99,27 +102,34 @@ fun ScreenStudentControl(
                 ScreenStudentControlList(
                     screenStatus = screenState
                 )
+
             }
 
-            if (screenState is ScreenState.Practices) {
-                Box(
-                    contentAlignment = Alignment.BottomEnd, modifier = Modifier
-                        .padding(vertical = 16.dp, horizontal = 16.dp)
-                        .fillMaxSize()
+        }
+    }
+
+    if (screenState is ScreenState.Practices) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            Column(modifier = Modifier.align(alignment = Alignment.BottomEnd)){
+                FloatingActionButton(
+                    onClick = screenState.floatingButtonOnClick,
+                    backgroundColor = MaterialTheme.colors.surface
                 ) {
-                    FloatingActionButton(
-                        onClick = screenState.floatingButtonOnClick,
-                        backgroundColor = MaterialTheme.colors.surface
-                    ) {
-                        Icon(
-                            Icons.Filled.Add,
-                            contentDescription = stringResource(id = R.string.button_add_new_practice_description)
-                        )
-                    }
+                    Icon(
+                        Icons.Filled.Add,
+                        contentDescription = stringResource(id = R.string.button_add_new_practice_description)
+                    )
                 }
             }
         }
+
     }
+}
+
     if (menuOpen) {
         when (screenState) {
             is ScreenState.Practices -> {
