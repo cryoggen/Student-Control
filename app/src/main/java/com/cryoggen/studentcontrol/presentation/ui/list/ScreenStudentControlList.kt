@@ -54,29 +54,25 @@ fun ScreenStudentControlList(
             LazyColumn(modifier = Modifier.padding(vertical = 0.dp)) {
                 this.items(items = screenStatus.checkedStudentDomainList) { checkedStudent ->
 
-                    var chekStudent by remember { mutableStateOf(checkedStudent.check) }
 
-                    checkedStudent.check = chekStudent
-
-                    screenStatus.saveCheckStudent(
-                        StudentControlDomain(
-                            id = checkedStudent.id,
-                            practiceId = checkedStudent.practiceId,
-                            taskId = checkedStudent.taskId,
-                            nameId = checkedStudent.nameId,
-                            check = checkedStudent.check
-                        )
-                    )
-
-                    val saveCheckStudent = {
-                        chekStudent = !chekStudent
-
-
-                    }
-
+                    var chekStudent by remember { mutableStateOf(false) }
+                    chekStudent = checkedStudent.check
 
                     ScreenStudentControlItem(
-                        saveCheckStudent = saveCheckStudent,
+                        saveCheckStudent = {
+                            screenStatus.saveCheckStudent(
+                                StudentControlDomain(
+                                    id = checkedStudent.id,
+                                    practiceId = checkedStudent.practiceId,
+                                    taskId = checkedStudent.taskId,
+                                    nameId = checkedStudent.nameId,
+                                    check = !chekStudent
+                                )
+                            )
+                            checkedStudent.check = !checkedStudent.check
+                            chekStudent = checkedStudent.check
+
+                        },
                         deleteStudent = {
                             screenStatus.deleteTaskStudent(
                                 checkedStudent.taskId,
@@ -87,6 +83,8 @@ fun ScreenStudentControlList(
                         checked = chekStudent,
                         screenStatus = screenStatus
                     )
+
+
                 }
             }
         }

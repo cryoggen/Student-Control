@@ -1,7 +1,6 @@
 package com.cryoggen.studentcontrol.presentation.ui.list
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -21,20 +20,31 @@ import com.cryoggen.domain.models.TaskDomain
 import com.cryoggen.studentcontrol.R
 import com.cryoggen.studentcontrol.ScreenStudentControlList
 import com.cryoggen.studentcontrol.presentation.ui.menu.MenuScreen
+import com.cryoggen.studentcontrol.presentation.ui.menu.MenuType
 import com.cryoggen.studentcontrol.presentation.ui.navbar.Navbar
+import java.lang.Exception
 
+enum class SortStudents {
+    CHECKED, UNCHECKED, ALL
+}
 
 @Composable
 fun ScreenStudentControl(
     screenState: ScreenState,
     viewModel: ScreenStudentControlViewModel,
 ) {
-
+    var sortStudents by remember { mutableStateOf(SortStudents.ALL) }
     var menuOpen by remember { mutableStateOf(false) }
+
+    val practices: List<PracticeDomain> by viewModel.practices.observeAsState(initial = listOf())
+    val tasks: List<TaskDomain> by viewModel.tasks.observeAsState(initial = listOf())
+    val checkedStudentDomainList: List<CheckedStudentDomain> by viewModel.checkedStudentDomainList.observeAsState(
+        initial = listOf()
+    )
 
     when (screenState) {
         is ScreenState.Practices -> {
-            val practices: List<PracticeDomain> by viewModel.practices.observeAsState(initial = listOf())
+
             viewModel.getPractices()
             screenState.listPractices = practices
 
@@ -42,20 +52,43 @@ fun ScreenStudentControl(
 
         is ScreenState.Tasks -> {
 
-            val tasks: List<TaskDomain> by viewModel.tasks.observeAsState(initial = listOf())
-
             viewModel.getTasks(screenState.practiceId)
             screenState.listTasks = tasks
             screenState.navBar.iconRightOnClick = { menuOpen = true }
         }
 
         is ScreenState.Students -> {
-            val checkedStudentDomainList: List<CheckedStudentDomain> by viewModel.students.observeAsState(
-                initial = listOf()
-            )
+
+            when (sortStudents) {
+                SortStudents.ALL -> {
+                    viewModel.getStudents(
+                        practiceId = screenState.practiceId,
+                        taskId = screenState.taskId
+                    )
+                }
+
+                SortStudents.CHECKED -> {
+                    viewModel.getSortStudentsChecked(
+                        practiceId = screenState.practiceId,
+                        taskId = screenState.taskId
+                    )
+                }
+
+                SortStudents.UNCHECKED -> {
+                    viewModel.getSortStudentsUnchecked(
+                        practiceId = screenState.practiceId,
+                        taskId = screenState.taskId
+                    )
+                }
+                else -> {}
+            }
+
+
+            screenState.navBar.iconRightOnClick = { menuOpen = true }
 
 
             screenState.checkedStudentDomainList = checkedStudentDomainList
+
 
             screenState.saveCheckStudent =
                 { studentControlDomain: StudentControlDomain ->
@@ -76,78 +109,91 @@ fun ScreenStudentControl(
 
                 }
 
-            if (checkedStudentDomainList.isEmpty()) {
-                viewModel.getStudents(
-                    practiceId = screenState.practiceId,
-                    taskId = screenState.taskId
-                )
-            }
+
         }
         else -> {}
 
     }
 
-Box() {
-    Column(modifier = Modifier.padding(0.dp)) {
-        Navbar(
-            screenState = screenState
-        )
+    Box() {
+        Column(modifier = Modifier.padding(0.dp)) {
+            Navbar(
+                screenState = screenState
+            )
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(0.dp)
-        ) {
-            Column {
-                ScreenStudentControlList(
-                    screenStatus = screenState
-                )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(0.dp)
+            ) {
+                Column {
+                    ScreenStudentControlList(
+                        screenStatus = screenState
+                    )
+
+                }
 
             }
-
         }
-    }
 
-    if (screenState is ScreenState.Practices) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            Column(modifier = Modifier.align(alignment = Alignment.BottomEnd)){
-                FloatingActionButton(
-                    onClick = screenState.floatingButtonOnClick,
-                    backgroundColor = MaterialTheme.colors.surface
-                ) {
-                    Icon(
-                        Icons.Filled.Add,
-                        contentDescription = stringResource(id = R.string.button_add_new_practice_description)
-                    )
+        if (screenState is ScreenState.Practices) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                Column(modifier = Modifier.align(alignment = Alignment.BottomEnd)) {
+                    FloatingActionButton(
+                        onClick = screenState.floatingButtonOnClick,
+                        backgroundColor = MaterialTheme.colors.surface
+                    ) {
+                        Icon(
+                            Icons.Filled.Add,
+                            contentDescription = stringResource(id = R.string.button_add_new_practice_description)
+                        )
+                    }
                 }
             }
-        }
 
+        }
     }
-}
 
     if (menuOpen) {
         when (screenState) {
-            is ScreenState.Practices -> {
-
+            is ScreenState.Students -> {
+                MenuScreen(
+                    menuType = MenuType.STUDENTS,
+                    menuClose = { menuOpen = false },
+                    onClickIconLeft = {
+                        sortStudents = SortStudents.CHECKED
+                        menuOpen = false
+                    },
+                    onClickIconCenter = {
+                        sortStudents = SortStudents.UNCHECKED
+                        menuOpen = false
+                    },
+                    onClickIconRight = {
+                        sortStudents = SortStudents.ALL
+                        menuOpen = false
+                    }
+                )
             }
             is ScreenState.Tasks -> {
-                screenState.onDeletePracticePressed = {
-                    viewModel.deletePractice(screenState.practiceId)
-                    screenState.navBar.iconLeftOnClick()
-                }
-                MenuScreen(screenState = screenState, menuClose = { menuOpen = false })
+                MenuScreen(menuType = MenuType.TASKS, menuClose = { menuOpen = false },
+                        onClickIconLeft = {
+                            viewModel.deletePractice(screenState.practiceId)
+                            screenState.navBar.iconLeftOnClick()
+                        },
+                    onClickIconRight = screenState.onEditPracticePressed)
             }
-            is ScreenState.Students -> {
-            }
+
             else -> {}
         }
     }
+
+
 }
+
 
 
 

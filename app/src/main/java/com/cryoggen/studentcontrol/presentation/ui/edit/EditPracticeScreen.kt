@@ -16,6 +16,9 @@ import androidx.compose.ui.unit.dp
 import com.cryoggen.domain.models.*
 import com.cryoggen.studentcontrol.R
 import com.cryoggen.studentcontrol.presentation.ui.list.ScreenState
+import com.cryoggen.studentcontrol.presentation.ui.list.SortStudents
+import com.cryoggen.studentcontrol.presentation.ui.menu.MenuScreen
+import com.cryoggen.studentcontrol.presentation.ui.menu.MenuType
 import com.cryoggen.studentcontrol.presentation.ui.navbar.Navbar
 import java.util.*
 
@@ -31,14 +34,18 @@ fun EditPracticeScreen(
         mutableStateOf(false)
     }
 
+    var menuOpen by remember { mutableStateOf(false) }
+
     when (screenState) {
         is ScreenState.NewPractice -> {
+            screenState.navBar.onOpenMenuPressed = { menuOpen = true}
             onBackPressed = { screenState.navBar.iconLeftOnClick() }
             screenState.navBar.iconRightOnClick = {
                 savePracticeButtonClicked = true
             }
         }
         is ScreenState.EditPractice -> {
+            screenState.navBar.onOpenMenuPressed = { menuOpen = true}
             onBackPressed = { screenState.navBar.iconLeftOnClick() }
             screenState.navBar.iconRightOnClick = {
                 savePracticeButtonClicked = true
@@ -103,140 +110,156 @@ fun EditPracticeScreen(
     }
 
 
-Box() {
+    Box() {
 
-    Column() {
-        Navbar(
-            screenState = screenState
-        )
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState())
-
-        ) {
-
-            NewPracticeTextTitleEdit(text = stringResource(id = R.string.practice_name))
-
-            NewPracticeEditField(
-                value = practice.name,
-                onValueChange = {
-                    practice = practice.copy(name = it)
-                    savePracticeButtonClicked = false
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                ),
-                placeholder = R.string.new_practice_name_value,
-                editFieldStatus = EditFieldStatus.PRACTICES,
+        Column() {
+            Navbar(
+                screenState = screenState
             )
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState())
 
-            Spacer(Modifier.height(32.dp))
+            ) {
 
-            NewPracticeTextTitleEdit(text = stringResource(id = R.string.tasks))
+                NewPracticeTextTitleEdit(text = stringResource(id = R.string.practice_name))
 
-            for (i in 0 until tasks.size) {
                 NewPracticeEditField(
-                    value = tasks[i].name,
+                    value = practice.name,
                     onValueChange = {
-                        tasks[i] = tasks[i].copy(name = it)
+                        practice = practice.copy(name = it)
                         savePracticeButtonClicked = false
-                    },
-                    onDeleteEditField = {
-                        if (tasks[i].id != "") {
-                            viewModel.deleteTask(tasks[i].id)
-                        }
-                        tasks.removeAt(i)
                     },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Next,
                     ),
-                    placeholder = R.string.new_task_name_value,
-                    editFieldStatus = EditFieldStatus.TASKS
+                    placeholder = R.string.new_practice_name_value,
+                    editFieldStatus = EditFieldStatus.PRACTICES,
                 )
-            }
 
-            NewPracticeScreenButton(
-                text = stringResource(id = R.string.new_task_name_text_button),
-                addNewEditField = { tasks.add(TaskDomain(id = "", name = "")) }
-            )
+                Spacer(Modifier.height(32.dp))
 
-            Spacer(Modifier.height(32.dp))
+                NewPracticeTextTitleEdit(text = stringResource(id = R.string.tasks))
 
-            NewPracticeTextTitleEdit(text = stringResource(id = R.string.students))
-            for (i in 0 until students.size) {
-                NewPracticeEditField(
-                    value = students[i].name,
-                    onValueChange = {
-                        students[i] = students[i].copy(name = it)
-                        savePracticeButtonClicked = false
-                    },
-                    onDeleteEditField = {
-                        if (students[i].id != "") {
-                            viewModel.deleteStudent(students[i].id)
-                        }
-                        students.removeAt(i) },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next,
-                    ),
-                    placeholder = R.string.new_student_name_value,
-                    editFieldStatus = EditFieldStatus.STUDENTS
-                )
-            }
-            NewPracticeScreenButton(
-                text = stringResource(id = R.string.new_student_text_button),
-                addNewEditField = {
-                    students.add(
-                        StudentDomain(
-                            id = "",
-                            name = "",
-                        )
+                for (i in 0 until tasks.size) {
+                    NewPracticeEditField(
+                        value = tasks[i].name,
+                        onValueChange = {
+                            tasks[i] = tasks[i].copy(name = it)
+                            savePracticeButtonClicked = false
+                        },
+                        onDeleteEditField = {
+                            if (tasks[i].id != "") {
+                                viewModel.deleteTask(tasks[i].id)
+                            }
+                            tasks.removeAt(i)
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next,
+                        ),
+                        placeholder = R.string.new_task_name_value,
+                        editFieldStatus = EditFieldStatus.TASKS
                     )
                 }
-            )
-        }
 
+                NewPracticeScreenButton(
+                    text = stringResource(id = R.string.new_task_name_text_button),
+                    addNewEditField = { tasks.add(TaskDomain(id = "", name = "")) }
+                )
+
+                Spacer(Modifier.height(32.dp))
+
+                NewPracticeTextTitleEdit(text = stringResource(id = R.string.students))
+                for (i in 0 until students.size) {
+                    NewPracticeEditField(
+                        value = students[i].name,
+                        onValueChange = {
+                            students[i] = students[i].copy(name = it)
+                            savePracticeButtonClicked = false
+                        },
+                        onDeleteEditField = {
+                            if (students[i].id != "") {
+                                viewModel.deleteStudent(students[i].id)
+                            }
+                            students.removeAt(i)
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next,
+                        ),
+                        placeholder = R.string.new_student_name_value,
+                        editFieldStatus = EditFieldStatus.STUDENTS
+                    )
+                }
+                NewPracticeScreenButton(
+                    text = stringResource(id = R.string.new_student_text_button),
+                    addNewEditField = {
+                        students.add(
+                            StudentDomain(
+                                id = "",
+                                name = "",
+                            )
+                        )
+                    }
+                )
+            }
+
+        }
+        when {
+
+            practiceVerification(practice) && savePracticeButtonClicked -> {
+                SnackBar(stringResource(id = R.string.practice_not_introduced), stopSnackBar = {
+                    savePracticeButtonClicked = false
+                })
+            }
+
+            tasksVerification(tasks) && savePracticeButtonClicked -> {
+                SnackBar(stringResource(id = R.string.tasks_not_introduced), stopSnackBar = {
+                    savePracticeButtonClicked = false
+                })
+
+            }
+            studentsVerification(students) && savePracticeButtonClicked -> {
+                SnackBar(stringResource(id = R.string.students_not_introduced), stopSnackBar = {
+                    savePracticeButtonClicked = false
+                })
+
+            }
+
+            savePracticeButtonClicked -> {
+
+                viewModel.insertStudentsControl(
+                    practice = practice,
+                    tasks = tasks,
+                    students = students
+                )
+                onBackPressed()
+                savePracticeButtonClicked = false
+            }
+
+        }
     }
-    when {
 
-        practiceVerification(practice) && savePracticeButtonClicked -> {
-            SnackBar(stringResource(id = R.string.practice_not_introduced), stopSnackBar = {
-                savePracticeButtonClicked = false
-            })
-        }
+    if (menuOpen) {
 
-        tasksVerification(tasks) && savePracticeButtonClicked -> {
-            SnackBar(stringResource(id = R.string.tasks_not_introduced), stopSnackBar = {
-                savePracticeButtonClicked = false
-            })
-
-        }
-        studentsVerification(students) && savePracticeButtonClicked -> {
-            SnackBar(stringResource(id = R.string.students_not_introduced), stopSnackBar = {
-                savePracticeButtonClicked = false
-            })
-
-        }
-
-        savePracticeButtonClicked -> {
-
-            viewModel.insertStudentsControl(
-                practice = practice,
-                tasks = tasks,
-                students = students
+            MenuScreen(
+                menuType = MenuType.ARE_YOU_SURE,
+                menuClose = { menuOpen = false },
+                onClickIconLeft = {
+                    menuOpen = false
+                },
+                onClickIconRight = {
+                    onBackPressed()
+                    menuOpen = false
+                }
             )
-            onBackPressed()
-            savePracticeButtonClicked = false
-        }
 
     }
 }
 
-
-}
 
 fun studentsVerification(students: List<StudentDomain>): Boolean {
     for (student in students) {

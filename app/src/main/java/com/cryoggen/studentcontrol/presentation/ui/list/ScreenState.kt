@@ -24,7 +24,6 @@ sealed class ScreenState {
         val navBar: NavBar,
         var itemListOnClickItem: (String, String, String, String) -> Unit,
         var onEditPracticePressed: () -> Unit,
-        var onDeletePracticePressed: () -> Unit = {},
     ) : ScreenState()
 
     data class Students(
@@ -35,26 +34,30 @@ sealed class ScreenState {
         val taskName: String,
         var checkedStudentDomainList: List<CheckedStudentDomain> = listOf(),
         var saveCheckStudent: (StudentControlDomain) -> Unit = {},
-        var deleteTaskStudent: (String, String) -> Unit = {_,_ ->}
-    ) : ScreenState()
+        var deleteTaskStudent: (String, String) -> Unit = { _, _ -> },
+
+
+        ) : ScreenState()
 
     data class NewPractice(
         val navBar: NavBar,
-        var insertStudents: () -> Unit = {}
-    ): ScreenState()
+        var insertStudents: () -> Unit = {},
+    ) : ScreenState()
 
     data class EditPractice(
         val practiceId: String,
         val practiceName: String,
         val navBar: NavBar,
-        var insertStudent: () -> Unit = {}
-    ): ScreenState()
+        var insertStudent: () -> Unit = {},
+    ) : ScreenState()
 }
 
 data class NavBar(
+    var onOpenMenuPressed: () -> Unit = {},
     val iconLeftOnClick: () -> Unit = {},
     var iconRightOnClick: () -> Unit = {},
     val iconLeft: ImageVector = Icons.Filled.House,
     val iconRight: ImageVector = Icons.Filled.House,
     val titleText: String = "",
 )
+

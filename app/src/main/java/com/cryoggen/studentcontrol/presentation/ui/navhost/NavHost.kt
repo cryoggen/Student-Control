@@ -68,8 +68,6 @@ fun NavHost(modifier: Modifier = Modifier) {
             val practiceIdArgument = entry.arguments?.getString("practiceId")
             val practiceNameArgument = entry.arguments?.getString("practiceName")
 
-            Log.d("11111", practiceNameArgument!!)
-            Log.d("11111", practiceIdArgument!!)
             val itemListOnClickItem =
                 { practiceId: String, practiceName: String, taskId: String, taskName: String ->
                     navController.navigate("list_students/$practiceId/$practiceName/$taskId/$taskName")
@@ -92,7 +90,7 @@ fun NavHost(modifier: Modifier = Modifier) {
                     practiceName = practiceNameArgument,
                     itemListOnClickItem = itemListOnClickItem,
                     navBar = navBar,
-                    onEditPracticePressed = onEditPracticePressed
+                    onEditPracticePressed = onEditPracticePressed,
                 )
 
             ScreenStudentControl(
@@ -133,7 +131,7 @@ fun NavHost(modifier: Modifier = Modifier) {
                     practiceName = practiceNameArgument!!,
                     taskId = taskIdArgument!!,
                     taskName = taskNameArgument,
-                    navBar = navBar
+                    navBar = navBar,
                 )
 
 

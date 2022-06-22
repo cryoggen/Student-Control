@@ -14,10 +14,10 @@ import androidx.compose.ui.unit.dp
 import com.cryoggen.studentcontrol.R
 
 @Composable
-fun MenuTitleText() {
+fun MenuTitleText(titleText: String) {
 
         Text(
-            text = stringResource(id = R.string.menu_practice),
+            text = titleText,
             style = MaterialTheme.typography.h6.copy(
                 fontWeight = FontWeight.Medium
             )

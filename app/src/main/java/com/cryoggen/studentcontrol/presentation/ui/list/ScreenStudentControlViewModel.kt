@@ -24,9 +24,9 @@ class ScreenStudentControlViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    private val _students = MutableLiveData<List<CheckedStudentDomain>>()
-    val students: LiveData<List<CheckedStudentDomain>>
-        get() = _students
+    private val _checkedStudentDomainList = MutableLiveData<List<CheckedStudentDomain>>()
+    val checkedStudentDomainList: LiveData<List<CheckedStudentDomain>>
+        get() = _checkedStudentDomainList
 
     private val _studentsControlList = MutableLiveData<List<StudentControlDomain>>()
     val studentsControlList: LiveData<List<StudentControlDomain>>
@@ -42,7 +42,7 @@ class ScreenStudentControlViewModel @Inject constructor(
 
     fun getStudents(practiceId: String, taskId: String) {
         viewModelScope.launch {
-            _students.value = getCheckedStudentsUseCase.execute(practiceId = practiceId, taskId = taskId)
+            _checkedStudentDomainList.value = getCheckedStudentsUseCase.execute(practiceId = practiceId, taskId = taskId)
         }
     }
 
@@ -80,7 +80,7 @@ class ScreenStudentControlViewModel @Inject constructor(
     fun deleteTaskStudent(practiceId: String, taskId: String, studentId: String, ) {
         viewModelScope.launch {
             deleteTaskStudentUseCase.execute(taskId = taskId, studentId = studentId)
-            _students.value = getCheckedStudentsUseCase.execute(practiceId = practiceId, taskId = taskId)
+            _checkedStudentDomainList.value = getCheckedStudentsUseCase.execute(practiceId = practiceId, taskId = taskId)
         }
     }
 
@@ -88,6 +88,26 @@ class ScreenStudentControlViewModel @Inject constructor(
         viewModelScope.launch {
             _studentsControlList.value =
                 getStudentsControlListUseCase.execute(practiceId = practiceId, taskId = taskId)
+        }
+    }
+
+    fun getSortStudentsChecked(practiceId: String, taskId: String) {
+        viewModelScope.launch {
+            _checkedStudentDomainList.value = getCheckedStudentsUseCase.execute(practiceId = practiceId, taskId = taskId).filter { it.check == true }
+            for (st in _checkedStudentDomainList.value!!) {
+                Log.d("11111", st.name)
+                Log.d("11111", st.check.toString())
+            }
+        }
+    }
+
+    fun getSortStudentsUnchecked(practiceId: String, taskId: String) {
+        viewModelScope.launch {
+            _checkedStudentDomainList.value = getCheckedStudentsUseCase.execute(practiceId = practiceId, taskId = taskId).filter { it.check == false }
+            for (st in _checkedStudentDomainList.value!!) {
+                Log.d("11111", st.name)
+                Log.d("11111", st.check.toString())
+            }
         }
     }
 

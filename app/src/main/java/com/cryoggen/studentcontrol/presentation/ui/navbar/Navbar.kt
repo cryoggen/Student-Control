@@ -40,7 +40,9 @@ fun Navbar(
         modifier = Modifier.padding(8.dp)
     ) {
         IconLeftNavbar(
-            iconLeftOnClick = navBar.iconLeftOnClick,
+            iconLeftOnClick = if ((screenState is ScreenState.EditPractice)||(screenState is ScreenState.NewPractice)) {
+                { navBar.onOpenMenuPressed() }
+            } else navBar.iconLeftOnClick,
             iconLeft = navBar.iconLeft,
             screenState = screenState
         )

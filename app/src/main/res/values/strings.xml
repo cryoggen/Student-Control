@@ -20,19 +20,28 @@
     //List students
     <string name="navbar_students_title_text">Students</string>
 
-
     //Descriptions
     <string name="button_close_description">Close</string>
     <string name="button_add_new_practice_description">Add new practice</string>
     <string name="nav_bar_menu_description">Menu</string>
     <string name="nav_bar_arrow_back_description">Arrow back</string>
+    <string name="delete_practice_description">Delete practice</string>
+    <string name="edit_practice_description">Edit practice</string>
+    <string name="show_only_checked_students_description">Show only checked students</string>
+    <string name="show_only_unchecked_students_description">Show only unchecked students</string>
+    <string name="show_all_students_description">Show all students</string>
+    <string name="yes_button_text_description">Yes button</string>
+    <string name="no_button_text_description">No button</string>
 
     //Menu
-    <string name="menu_practice">Menu practice</string>
+    <string name="menu_tasks">Menu practice</string>
+    <string name="menu_sort_students">Menu sort students</string>
+    <string name="menu_are_you_sure">Are you sure?</string>
 
     //Snack Bar message
     <string name="practice_not_introduced">Please enter the name of the practice</string>
     <string name="tasks_not_introduced">Please enter at least one task name</string>
     <string name="students_not_introduced">Please enter the name of the student</string>
+
 
 </resources>
