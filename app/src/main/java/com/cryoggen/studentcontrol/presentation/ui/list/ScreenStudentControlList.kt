@@ -18,8 +18,9 @@ fun ScreenStudentControlList(
 
     when (screenStatus) {
         is ScreenState.Practices -> {
+            val listTasks = screenStatus.listPractices
             LazyColumn(modifier = Modifier.padding(vertical = 0.dp)) {
-                this.items(items = screenStatus.listPractices) { practice ->
+                this.items(items = listTasks) { practice ->
                     ScreenStudentControlItem(
                         item = practice.name,
                         onClick = {
@@ -33,8 +34,9 @@ fun ScreenStudentControlList(
 
 
         is ScreenState.Tasks -> {
+            val listTasks = screenStatus.listTasks
             LazyColumn(modifier = Modifier.padding(vertical = 0.dp)) {
-                this.items(items = screenStatus.listTasks) { task ->
+                this.items(items = listTasks) { task ->
                     ScreenStudentControlItem(
                         item = task.name,
                         onClick = {
@@ -51,9 +53,9 @@ fun ScreenStudentControlList(
             }
         }
         is ScreenState.Students -> {
+            val students = screenStatus.checkedStudentDomainList
             LazyColumn(modifier = Modifier.padding(vertical = 0.dp)) {
-                this.items(items = screenStatus.checkedStudentDomainList) { checkedStudent ->
-
+                this.items(items = students) { checkedStudent ->
 
                     var chekStudent by remember { mutableStateOf(false) }
                     chekStudent = checkedStudent.check

@@ -2,6 +2,13 @@ package com.cryoggen.domain.models
 
 import java.util.*
 
+
+data class PracticeDomain(
+    val id:String = UUID.randomUUID().toString(),
+    var name: String,
+    val date:String = Date().toString()
+)
+
 data class StudentControlDomain(
     val id:String = UUID.randomUUID().toString(),
     val practiceId: String,
@@ -17,12 +24,6 @@ data class CheckedStudentDomain(
     var nameId: String,
     val name: String,
     var check:Boolean
-)
-
-data class PracticeDomain(
-    val id:String = UUID.randomUUID().toString(),
-    var name: String,
-    val date:String = Date().toString()
 )
 
 data class TaskDomain(

@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">Student control</string>
+
+    //New practice screen
+    <string name="practice_name">Название практики</string>
+    <string name="tasks">Задания</string>
+    <string name="students">Студенты</string>
+    <string name="new_practice_name_value">название</string>
+    <string name="new_task_name_value">задание</string>
+    <string name="new_student_name_value">студент</string>
+    <string name="new_task_name_text_button">+ ЗАДАНИЕ</string>
+    <string name="new_student_text_button">+ СТУДЕНТ</string>
+    <string name="new_practice">Новая практика</string>
+    <string name="edit_practice">Редактировние практики</string>
+
+    //List practices
+    <string name="navbar_practices_title_text">Практики</string>
+    //List tasks
+    <string name="navbar_tasks_title_text">Задания</string>
+    //List students
+    <string name="navbar_students_title_text">Студенты</string>
+
+    //Descriptions
+    <string name="button_close_description">Закрыть</string>
+    <string name="button_add_new_practice_description">Добавить новую практику</string>
+    <string name="nav_bar_menu_description">Меню</string>
+    <string name="nav_bar_arrow_back_description">Стрелка назад</string>
+    <string name="delete_practice_description">Удалить практику</string>
+    <string name="edit_practice_description">Edit practice</string>
+    <string name="show_only_checked_students_description">Показать только отмеченных студентов</string>
+    <string name="show_only_unchecked_students_description">Показать только не отмеченных студентов</string>
+    <string name="show_all_students_description">Показать всех студентов</string>
+    <string name="yes_button_text_description">Кнопка да</string>
+    <string name="no_button_text_description">Кнопка нет</string>
+
+    //Menu
+    <string name="menu_tasks">Меню практики</string>
+    <string name="menu_sort_students">Меню сортировки студентов</string>
+    <string name="menu_are_you_sure">Вы уверены?</string>
+
+    //Snack Bar message
+    <string name="practice_not_introduced">Пожалуйста, введите название практики</string>
+    <string name="tasks_not_introduced">Пожалуйста, введите название хотя бы одного задания</string>
+    <string name="students_not_introduced">Пожалуйста, введите имя хотя бы одного студента</string>
+
+
+</resources>

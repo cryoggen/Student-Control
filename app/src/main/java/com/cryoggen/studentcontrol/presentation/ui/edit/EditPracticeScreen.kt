@@ -7,6 +7,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,18 +36,19 @@ fun EditPracticeScreen(
         mutableStateOf(false)
     }
 
+
     var menuOpen by remember { mutableStateOf(false) }
 
     when (screenState) {
         is ScreenState.NewPractice -> {
-            screenState.navBar.onOpenMenuPressed = { menuOpen = true}
+            screenState.navBar.onOpenMenuPressed = { menuOpen = true }
             onBackPressed = { screenState.navBar.iconLeftOnClick() }
             screenState.navBar.iconRightOnClick = {
                 savePracticeButtonClicked = true
             }
         }
         is ScreenState.EditPractice -> {
-            screenState.navBar.onOpenMenuPressed = { menuOpen = true}
+            screenState.navBar.onOpenMenuPressed = { menuOpen = true }
             onBackPressed = { screenState.navBar.iconLeftOnClick() }
             screenState.navBar.iconRightOnClick = {
                 savePracticeButtonClicked = true
@@ -57,7 +60,11 @@ fun EditPracticeScreen(
     }
 
 
-    var practice by remember {
+    val PracticeDomainSaver = listSaver<PracticeDomain, Any>(
+        save = { listOf(it.id, it.name) },
+        restore = { PracticeDomain(it[0] as String, it[1] as String) }
+    )
+    var practice by rememberSaveable(stateSaver = PracticeDomainSaver) {
         mutableStateOf(
             PracticeDomain(
                 id = practiceId,
@@ -66,17 +73,64 @@ fun EditPracticeScreen(
         )
     }
 
+    val TaskDomainSaver = listSaver<SnapshotStateList<TaskDomain>, Any>(
+        save = {
+            val list = mutableListOf<String>()
+            for (task in it) {
+                list.add(task.id)
+                list.add(task.name)
+            }
+            list
+        },
+        restore = {
+            val mutableStateList = mutableStateListOf<TaskDomain>()
+            val list = it.toList()
+            for (i in list.indices step 2) {
+                mutableStateList.add(TaskDomain(it[i] as String, it[i+1] as String))
+            }
+            mutableStateList
+        }
+    )
 
-    val tasks = remember { mutableStateListOf(TaskDomain(id = "", name = "")) }
+    val tasksMutableState = rememberSaveable(stateSaver = TaskDomainSaver) {
+        mutableStateOf(
+            mutableStateListOf(TaskDomain(id = "", name = ""))
+        )
+    }
+    val tasks = tasksMutableState.value
 
-    val students = remember {
-        mutableStateListOf(
-            StudentDomain(
-                id = "",
-                name = "",
+
+    val StudentDomainSaver = listSaver<SnapshotStateList<StudentDomain>, Any>(
+        save = {
+            val list = mutableListOf<String>()
+            for (student in it) {
+                list.add(student.id)
+                list.add(student.name)
+            }
+            list},
+        restore = {
+            val mutableStateList = mutableStateListOf<StudentDomain>()
+            val list = it.toList()
+            for (i in list.indices step 2) {
+                mutableStateList.add(StudentDomain(it[i] as String, it[i+1] as String))
+            }
+            mutableStateList
+        }
+    )
+
+    val studentsMutableState = rememberSaveable(stateSaver = StudentDomainSaver) {
+        mutableStateOf(
+            mutableStateListOf(
+                StudentDomain(
+                    id = "",
+                    name = "",
+                )
             )
         )
     }
+
+
+    val students = studentsMutableState.value
 
     if ((screenState is ScreenState.EditPractice) && (tasks.size == 1) && (tasks[0].name == "")) {
 
@@ -91,14 +145,14 @@ fun EditPracticeScreen(
             )
         )
 
-        if (!tasksDomain.isEmpty()) {
+        if (tasksDomain.isNotEmpty()) {
             tasks.clear()
             for (task in tasksDomain) {
                 tasks.add(task)
             }
         }
 
-        if (!studentsDomain.isEmpty()) {
+        if (studentsDomain.isNotEmpty()) {
             students.clear()
             for (student in studentsDomain) {
                 students.add(student)
@@ -133,7 +187,7 @@ fun EditPracticeScreen(
                     },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next,
+                        imeAction = ImeAction.Done,
                     ),
                     placeholder = R.string.new_practice_name_value,
                     editFieldStatus = EditFieldStatus.PRACTICES,
@@ -188,7 +242,7 @@ fun EditPracticeScreen(
                         },
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Next,
+                            imeAction = ImeAction.Send,
                         ),
                         placeholder = R.string.new_student_name_value,
                         editFieldStatus = EditFieldStatus.STUDENTS
@@ -245,17 +299,17 @@ fun EditPracticeScreen(
 
     if (menuOpen) {
 
-            MenuScreen(
-                menuType = MenuType.ARE_YOU_SURE,
-                menuClose = { menuOpen = false },
-                onClickIconLeft = {
-                    menuOpen = false
-                },
-                onClickIconRight = {
-                    onBackPressed()
-                    menuOpen = false
-                }
-            )
+        MenuScreen(
+            menuType = MenuType.ARE_YOU_SURE,
+            menuClose = { menuOpen = false },
+            onClickIconLeft = {
+                menuOpen = false
+            },
+            onClickIconRight = {
+                onBackPressed()
+                menuOpen = false
+            }
+        )
 
     }
 }

@@ -94,20 +94,13 @@ class ScreenStudentControlViewModel @Inject constructor(
     fun getSortStudentsChecked(practiceId: String, taskId: String) {
         viewModelScope.launch {
             _checkedStudentDomainList.value = getCheckedStudentsUseCase.execute(practiceId = practiceId, taskId = taskId).filter { it.check == true }
-            for (st in _checkedStudentDomainList.value!!) {
-                Log.d("11111", st.name)
-                Log.d("11111", st.check.toString())
-            }
         }
     }
 
     fun getSortStudentsUnchecked(practiceId: String, taskId: String) {
         viewModelScope.launch {
             _checkedStudentDomainList.value = getCheckedStudentsUseCase.execute(practiceId = practiceId, taskId = taskId).filter { it.check == false }
-            for (st in _checkedStudentDomainList.value!!) {
-                Log.d("11111", st.name)
-                Log.d("11111", st.check.toString())
-            }
+
         }
     }
 

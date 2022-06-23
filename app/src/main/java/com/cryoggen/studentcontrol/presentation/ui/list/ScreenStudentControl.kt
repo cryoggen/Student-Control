@@ -43,15 +43,13 @@ fun ScreenStudentControl(
     )
 
     when (screenState) {
-        is ScreenState.Practices -> {
 
+        is ScreenState.Practices -> {
             viewModel.getPractices()
             screenState.listPractices = practices
-
         }
 
         is ScreenState.Tasks -> {
-
             viewModel.getTasks(screenState.practiceId)
             screenState.listTasks = tasks
             screenState.navBar.iconRightOnClick = { menuOpen = true }
@@ -83,12 +81,9 @@ fun ScreenStudentControl(
                 else -> {}
             }
 
-
             screenState.navBar.iconRightOnClick = { menuOpen = true }
 
-
             screenState.checkedStudentDomainList = checkedStudentDomainList
-
 
             screenState.saveCheckStudent =
                 { studentControlDomain: StudentControlDomain ->
@@ -106,13 +101,10 @@ fun ScreenStudentControl(
                         taskId = taskId,
                         studentId = studentId
                     )
-
                 }
-
 
         }
         else -> {}
-
     }
 
     Box() {
