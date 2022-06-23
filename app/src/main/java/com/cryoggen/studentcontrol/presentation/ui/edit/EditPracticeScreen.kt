@@ -212,7 +212,7 @@ fun EditPracticeScreen(
                         },
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Next,
+                            imeAction = ImeAction.Done,
                         ),
                         placeholder = R.string.new_task_name_value,
                         editFieldStatus = EditFieldStatus.TASKS
@@ -242,7 +242,7 @@ fun EditPracticeScreen(
                         },
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Send,
+                            imeAction = ImeAction.Done,
                         ),
                         placeholder = R.string.new_student_name_value,
                         editFieldStatus = EditFieldStatus.STUDENTS

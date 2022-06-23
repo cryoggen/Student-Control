@@ -28,7 +28,8 @@ data class CheckedStudentDomain(
 
 data class TaskDomain(
     var id:String = UUID.randomUUID().toString(),
-    var name: String
+    var name: String,
+    val date:String = Date().toString()
 )
 
 data class StudentDomain(

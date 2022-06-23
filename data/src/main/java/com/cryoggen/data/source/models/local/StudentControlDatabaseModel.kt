@@ -1,5 +1,6 @@
 package com.cryoggen.data.source.models.local
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.cryoggen.domain.models.*
@@ -44,7 +45,9 @@ data class PracticeDatabaseModel(
 data class TaskDatabaseModel(
     @PrimaryKey
     val id: String,
-    val name: String
+    val name: String,
+    @ColumnInfo(defaultValue = "")
+    val date: String
 )
 
 
@@ -99,7 +102,8 @@ fun List<TaskDomain>.asDatabaseModel(): List<TaskDatabaseModel> {
     return map {
         TaskDatabaseModel(
             id = it.id,
-            name = it.name
+            name = it.name,
+            date = it.date
         )
     }
 }
@@ -133,7 +137,8 @@ fun List<TaskDatabaseModel>.asDomainModel(): List<TaskDomain> {
     return map {
         TaskDomain(
             id = it.id,
-            name = it.name
+            name = it.name,
+            date = it.date
         )
     }
 }
