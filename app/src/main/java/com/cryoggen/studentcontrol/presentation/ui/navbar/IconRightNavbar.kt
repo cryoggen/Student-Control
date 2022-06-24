@@ -36,6 +36,7 @@ fun IconRightNavbar(
             } else {
                 Icon(
                     iconRight,
+                    tint =  MaterialTheme.colors.onPrimary,
                     contentDescription = stringResource(id = R.string.nav_bar_menu_description)
                 )
             }

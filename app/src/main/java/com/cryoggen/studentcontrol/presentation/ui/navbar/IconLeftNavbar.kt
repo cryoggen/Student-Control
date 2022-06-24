@@ -1,9 +1,11 @@
 package com.cryoggen.studentcontrol.presentation.ui.navbar
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.House
 import androidx.compose.runtime.Composable
@@ -26,10 +28,11 @@ fun IconLeftNavbar(iconLeftOnClick: () -> Unit, iconLeft: ImageVector, screenSta
             }
 
         } else {
-            IconButton(onClick = iconLeftOnClick) {
+            IconButton(onClick = iconLeftOnClick,) {
                 Icon(
                     iconLeft,
-                    contentDescription = stringResource(id = R.string.nav_bar_arrow_back_description)
+                    contentDescription = stringResource(id = R.string.nav_bar_arrow_back_description),
+                    tint =  MaterialTheme.colors.onPrimary
                 )
             }
         }
