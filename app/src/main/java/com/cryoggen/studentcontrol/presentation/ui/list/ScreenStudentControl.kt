@@ -25,7 +25,7 @@ import com.cryoggen.studentcontrol.presentation.ui.navbar.Navbar
 import java.lang.Exception
 
 enum class SortStudents {
-    CHECKED, UNCHECKED, ALL
+    CHECKED, UNCHECKED, ALL, NONE
 }
 
 @Composable
@@ -39,7 +39,7 @@ fun ScreenStudentControl(
     val practices: List<PracticeDomain> by viewModel.practices.observeAsState(initial = listOf())
     val tasks: List<TaskDomain> by viewModel.tasks.observeAsState(initial = listOf())
     val checkedStudentDomainList: List<CheckedStudentDomain> by viewModel.checkedStudentDomainList.observeAsState(
-        initial = listOf()
+        initial = mutableListOf()
     )
 
     when (screenState) {
@@ -58,25 +58,33 @@ fun ScreenStudentControl(
         is ScreenState.Students -> {
 
             when (sortStudents) {
+                SortStudents.NONE -> {
+                }
                 SortStudents.ALL -> {
+                    viewModel.clearListStudentsChecked()
                     viewModel.getStudents(
                         practiceId = screenState.practiceId,
                         taskId = screenState.taskId
                     )
+                    sortStudents = SortStudents.NONE
                 }
 
                 SortStudents.CHECKED -> {
+                    viewModel.clearListStudentsChecked()
                     viewModel.getSortStudentsChecked(
                         practiceId = screenState.practiceId,
                         taskId = screenState.taskId
                     )
+                    sortStudents = SortStudents.NONE
                 }
 
                 SortStudents.UNCHECKED -> {
+                    viewModel.clearListStudentsChecked()
                     viewModel.getSortStudentsUnchecked(
                         practiceId = screenState.practiceId,
                         taskId = screenState.taskId
                     )
+                    sortStudents = SortStudents.NONE
                 }
                 else -> {}
             }
@@ -171,12 +179,14 @@ fun ScreenStudentControl(
                 )
             }
             is ScreenState.Tasks -> {
-                MenuScreen(menuType = MenuType.TASKS, menuClose = { menuOpen = false },
-                        onClickIconLeft = {
-                            viewModel.deletePractice(screenState.practiceId)
-                            screenState.navBar.iconLeftOnClick()
-                        },
-                    onClickIconRight = screenState.onEditPracticePressed)
+                MenuScreen(
+                    menuType = MenuType.TASKS, menuClose = { menuOpen = false },
+                    onClickIconLeft = {
+                        viewModel.deletePractice(screenState.practiceId)
+                        screenState.navBar.iconLeftOnClick()
+                    },
+                    onClickIconRight = screenState.onEditPracticePressed
+                )
             }
 
             else -> {}

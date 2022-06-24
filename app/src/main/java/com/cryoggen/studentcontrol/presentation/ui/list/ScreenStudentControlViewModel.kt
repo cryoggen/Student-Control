@@ -80,7 +80,6 @@ class ScreenStudentControlViewModel @Inject constructor(
     fun deleteTaskStudent(practiceId: String, taskId: String, studentId: String, ) {
         viewModelScope.launch {
             deleteTaskStudentUseCase.execute(taskId = taskId, studentId = studentId)
-            _checkedStudentDomainList.value = getCheckedStudentsUseCase.execute(practiceId = practiceId, taskId = taskId)
         }
     }
 
@@ -103,6 +102,13 @@ class ScreenStudentControlViewModel @Inject constructor(
 
         }
     }
+
+    fun clearListStudentsChecked() {
+        viewModelScope.launch {
+            _checkedStudentDomainList.value = listOf()
+        }
+    }
+
 
 }
 
