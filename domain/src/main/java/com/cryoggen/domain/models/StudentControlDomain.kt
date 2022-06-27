@@ -6,7 +6,7 @@ import java.util.*
 data class PracticeDomain(
     val id:String = UUID.randomUUID().toString(),
     var name: String,
-    val date:String = Date().toString()
+    val date:String = Calendar.getInstance().time.time.toString()
 )
 
 data class StudentControlDomain(
@@ -29,7 +29,7 @@ data class CheckedStudentDomain(
 data class TaskDomain(
     var id:String = UUID.randomUUID().toString(),
     var name: String,
-    val date:String = Date().toString()
+    val date:String = Calendar.getInstance().time.time.toString()
 )
 
 data class StudentDomain(

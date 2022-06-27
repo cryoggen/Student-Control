@@ -1,6 +1,9 @@
 package com.cryoggen.studentcontrol.presentation.ui.list
 
+import android.icu.util.Calendar
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -28,6 +31,7 @@ enum class SortStudents {
     CHECKED, UNCHECKED, ALL, NONE
 }
 
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun ScreenStudentControl(
     screenState: ScreenState,
@@ -47,6 +51,8 @@ fun ScreenStudentControl(
         is ScreenState.Practices -> {
             viewModel.getPractices()
             screenState.listPractices = practices
+
+
         }
 
         is ScreenState.Tasks -> {

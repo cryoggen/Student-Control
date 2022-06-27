@@ -38,6 +38,7 @@ fun NewPracticeEditField(
     keyboardOptions: KeyboardOptions,
     placeholder: Int,
     editFieldStatus: EditFieldStatus,
+    focused: Boolean
 ) {
 
 
@@ -102,9 +103,11 @@ fun NewPracticeEditField(
 
             }
         }
+
+    if (focused) {
         DisposableEffect(Unit) {
             focusRequester.requestFocus()
             onDispose { }
         }
-
+    }
 }

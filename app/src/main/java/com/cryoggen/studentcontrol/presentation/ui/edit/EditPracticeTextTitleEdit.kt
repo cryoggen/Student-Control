@@ -18,7 +18,8 @@ fun NewPracticeTextTitleEdit(
 ) {
     Box(
         modifier = Modifier
-            .padding(0.dp)
+            .padding(horizontal =  16.dp)
+            .padding(bottom = 16.dp)
 
     ) {
         Text(

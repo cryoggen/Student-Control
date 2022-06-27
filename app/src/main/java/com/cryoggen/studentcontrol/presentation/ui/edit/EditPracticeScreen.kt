@@ -1,7 +1,12 @@
 package com.cryoggen.studentcontrol.presentation.ui.edit
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -17,13 +22,22 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.cryoggen.domain.models.*
 import com.cryoggen.studentcontrol.R
+import com.cryoggen.studentcontrol.ScreenStudentControlItem
 import com.cryoggen.studentcontrol.presentation.ui.list.ScreenState
 import com.cryoggen.studentcontrol.presentation.ui.list.SortStudents
 import com.cryoggen.studentcontrol.presentation.ui.menu.MenuScreen
 import com.cryoggen.studentcontrol.presentation.ui.menu.MenuType
 import com.cryoggen.studentcontrol.presentation.ui.navbar.Navbar
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
+enum class FocusFieldType {
+    TASK, STUDENT, NONE
+}
+
+
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun EditPracticeScreen(
     viewModel: EditPracticeScreenViewModel,
@@ -36,6 +50,13 @@ fun EditPracticeScreen(
         mutableStateOf(false)
     }
 
+    val listState = rememberLazyListState()
+
+    val coroutineScope = rememberCoroutineScope()
+
+    var focusFieldType by remember {
+        mutableStateOf(FocusFieldType.NONE)
+    }
 
     var menuOpen by remember { mutableStateOf(false) }
 
@@ -86,7 +107,7 @@ fun EditPracticeScreen(
             val mutableStateList = mutableStateListOf<TaskDomain>()
             val list = it.toList()
             for (i in list.indices step 2) {
-                mutableStateList.add(TaskDomain(it[i] as String, it[i+1] as String))
+                mutableStateList.add(TaskDomain(it[i] as String, it[i + 1] as String))
             }
             mutableStateList
         }
@@ -107,12 +128,13 @@ fun EditPracticeScreen(
                 list.add(student.id)
                 list.add(student.name)
             }
-            list},
+            list
+        },
         restore = {
             val mutableStateList = mutableStateListOf<StudentDomain>()
             val list = it.toList()
             for (i in list.indices step 2) {
-                mutableStateList.add(StudentDomain(it[i] as String, it[i+1] as String))
+                mutableStateList.add(StudentDomain(it[i] as String, it[i + 1] as String))
             }
             mutableStateList
         }
@@ -172,92 +194,123 @@ fun EditPracticeScreen(
             )
             Column(
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(horizontal = 16.dp)
             ) {
 
+                LazyColumn(state = listState,modifier = Modifier.padding(vertical = 0.dp)) {
+                    item {
+                        NewPracticeTextTitleEdit(text = stringResource(id = R.string.practice_name))
 
-                NewPracticeTextTitleEdit(text = stringResource(id = R.string.practice_name))
+                        NewPracticeEditField(
+                            focused = false,
+                            value = practice.name,
+                            onValueChange = {
+                                practice = practice.copy(name = it)
+                                savePracticeButtonClicked = false
+                            },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Done,
+                            ),
+                            placeholder = R.string.new_practice_name_value,
+                            editFieldStatus = EditFieldStatus.PRACTICES,
+                        )
 
-                NewPracticeEditField(
-                    value = practice.name,
-                    onValueChange = {
-                        practice = practice.copy(name = it)
-                        savePracticeButtonClicked = false
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Done,
-                    ),
-                    placeholder = R.string.new_practice_name_value,
-                    editFieldStatus = EditFieldStatus.PRACTICES,
-                )
+                        Spacer(Modifier.height(32.dp))
+                    }
 
-                Spacer(Modifier.height(32.dp))
+                    item {
+                        NewPracticeTextTitleEdit(text = stringResource(id = R.string.tasks))
+                    }
 
-                NewPracticeTextTitleEdit(text = stringResource(id = R.string.tasks))
-
-                for (i in 0 until tasks.size) {
-                    NewPracticeEditField(
-                        value = tasks[i].name,
-                        onValueChange = {
-                            tasks[i] = tasks[i].copy(name = it)
-                            savePracticeButtonClicked = false
-                        },
-                        onDeleteEditField = {
-                            if (tasks[i].id != "") {
-                                viewModel.deleteTask(tasks[i].id)
-                            }
-                            tasks.removeAt(i)
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Done,
-                        ),
-                        placeholder = R.string.new_task_name_value,
-                        editFieldStatus = EditFieldStatus.TASKS
-                    )
-                }
-
-                NewPracticeScreenButton(
-                    text = stringResource(id = R.string.new_task_name_text_button),
-                    addNewEditField = { tasks.add(TaskDomain(id = "", name = "")) }
-                )
-
-                Spacer(Modifier.height(32.dp))
-
-                NewPracticeTextTitleEdit(text = stringResource(id = R.string.students))
-                for (i in 0 until students.size) {
-                    NewPracticeEditField(
-                        value = students[i].name,
-                        onValueChange = {
-                            students[i] = students[i].copy(name = it)
-                            savePracticeButtonClicked = false
-                        },
-                        onDeleteEditField = {
-                            if (students[i].id != "") {
-                                viewModel.deleteStudent(students[i].id)
-                            }
-                            students.removeAt(i)
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Done,
-                        ),
-                        placeholder = R.string.new_student_name_value,
-                        editFieldStatus = EditFieldStatus.STUDENTS
-                    )
-                }
-                NewPracticeScreenButton(
-                    text = stringResource(id = R.string.new_student_text_button),
-                    addNewEditField = {
-                        students.add(
-                            StudentDomain(
-                                id = "",
-                                name = "",
-                            )
+                    itemsIndexed(items = tasks) {indexTask, task,  ->
+                        NewPracticeEditField(
+                            focused = (tasks.size - 1 == indexTask&&(focusFieldType == FocusFieldType.TASK)),
+                            value = task.name,
+                            onValueChange = {
+                                tasks[indexTask] =
+                                    tasks[indexTask].copy(name = it)
+                                savePracticeButtonClicked = false
+                            },
+                            onDeleteEditField = {
+                                if (tasks[indexTask].id != "") {
+                                    viewModel.deleteTask(tasks[indexTask].id)
+                                }
+                                tasks.removeAt(tasks.indexOf(task))
+                            },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Done,
+                            ),
+                            placeholder = R.string.new_task_name_value,
+                            editFieldStatus = EditFieldStatus.TASKS
                         )
                     }
-                )
+                    item {
+                        NewPracticeScreenButton(
+                            text = stringResource(id = R.string.new_task_name_text_button),
+                            addNewEditField = {
+                                focusFieldType = FocusFieldType.TASK
+                                tasks.add(TaskDomain(id = "", name = ""))
+                            }
+                        )
+                        Spacer(Modifier.height(32.dp))
+                    }
+
+                    item {
+                        NewPracticeTextTitleEdit(text = stringResource(id = R.string.students))
+                    }
+
+                    itemsIndexed(items = students) { indexStudents, student ->
+
+                        NewPracticeEditField(
+                            focused =  ((students.size - 1 == indexStudents)&&(focusFieldType == FocusFieldType.STUDENT)),
+                            value = students[indexStudents].name,
+                            onValueChange = {
+                                students[indexStudents] =
+                                    students[indexStudents].copy(name = it)
+                                savePracticeButtonClicked = false
+                            },
+                            onDeleteEditField = {
+                                if (students[students.indexOf(student)].id != "") {
+                                    viewModel.deleteStudent(students[students.indexOf(student)].id)
+                                }
+                                students.removeAt(students.indexOf(student))
+                            },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Done,
+                            ),
+                            placeholder = R.string.new_student_name_value,
+                            editFieldStatus = EditFieldStatus.STUDENTS
+                        )
+
+                        if ((students.size - 1 == indexStudents)&&(focusFieldType == FocusFieldType.STUDENT) ){
+                            coroutineScope.launch {
+                               delay(200)
+                                listState.scrollToItem(listState.layoutInfo.totalItemsCount)
+                            }
+                        }
+                    }
+
+                    item {
+                        NewPracticeScreenButton(
+                            text = stringResource(id = R.string.new_student_text_button),
+                            addNewEditField = {
+                                focusFieldType = FocusFieldType.STUDENT
+
+                                students.add(
+                                    StudentDomain(
+                                        id = "",
+                                        name = "",
+                                    )
+                                )
+
+                            }
+                        )
+                    }
+                }
+
             }
 
         }
