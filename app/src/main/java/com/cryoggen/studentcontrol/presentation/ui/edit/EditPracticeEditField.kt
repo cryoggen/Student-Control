@@ -2,7 +2,6 @@ package com.cryoggen.studentcontrol.presentation.ui.edit
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.*
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -40,10 +39,7 @@ fun NewPracticeEditField(
     placeholder: Int,
     editFieldStatus: EditFieldStatus,
 ) {
-    val coroutineScope = rememberCoroutineScope()
 
-    var editFieldShown by remember { mutableStateOf(false) }
-    var stateEditField by remember { mutableStateOf(true) }
 
     val focusRequester = FocusRequester()
 
@@ -54,18 +50,6 @@ fun NewPracticeEditField(
         backgroundColor = MaterialTheme.colors.surface.copy(alpha = 0.4f)
     )
 
-    if (stateEditField) {
-        coroutineScope.launch {
-            editFieldShown = true
-        }
-        stateEditField = false
-    }
-
-    AnimatedVisibility(
-        visible = editFieldShown,
-        enter = scaleIn(),
-        exit = scaleOut()
-    ) {
 
         Row(
             modifier = Modifier
@@ -106,13 +90,7 @@ fun NewPracticeEditField(
             }
             if (editFieldStatus != EditFieldStatus.PRACTICES) {
                 IconButton(onClick = {
-                    coroutineScope.launch {
-                        editFieldShown = false
-                        delay(1000)
                         onDeleteEditField()
-
-                    }
-
 
                 }) {
 
@@ -128,6 +106,5 @@ fun NewPracticeEditField(
             focusRequester.requestFocus()
             onDispose { }
         }
-    }
 
 }

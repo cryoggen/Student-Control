@@ -34,25 +34,6 @@ fun ScreenStudentControlItem(
     ) {
     val clickableEnabled = screenStatus !is ScreenState.Students
 
-    val coroutineScope = rememberCoroutineScope()
-
-    var itemShown by remember { mutableStateOf(false) }
-    var stateItemAnimation by remember { mutableStateOf(true) }
-
-    if (stateItemAnimation) {
-        coroutineScope.launch {
-            itemShown = true
-            stateItemAnimation = false
-        }
-
-    }
-
-
-    AnimatedVisibility(
-        visible = itemShown,
-        enter = expandHorizontally(),
-        exit = shrinkHorizontally()
-    ) {
 
         Card(
             backgroundColor = MaterialTheme.colors.primary,
@@ -96,9 +77,6 @@ fun ScreenStudentControlItem(
 
                     IconButton(onClick = {
                         deleteStudent()
-                        coroutineScope.launch {
-                            itemShown = false
-                        }
 
                     }
                     ) {
@@ -110,7 +88,6 @@ fun ScreenStudentControlItem(
                 }
             }
         }
-    }
 
 
 }

@@ -173,9 +173,8 @@ fun EditPracticeScreen(
             Column(
                 modifier = Modifier
                     .padding(16.dp)
-                    .verticalScroll(rememberScrollState())
-
             ) {
+
 
                 NewPracticeTextTitleEdit(text = stringResource(id = R.string.practice_name))
 
